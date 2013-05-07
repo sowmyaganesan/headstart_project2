@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% for q in quiz %}
+    {% for k,v in q.items %}
+      
+	      {% if k == "courseId" %}
+            	<p>CourseID : {{ v }}</p>
+        	{% endif %} 
+	      {% if k == "questions" %}
+            	<p>Question: {{ v }}</p>
+		
+        	{% endif %}
+	      {% if k == "id" %}
+            	<p>id : {{ v }}</p>
+        	{% endif %}
+	     </p>
+	    
+      
+    {% endfor %}
+  {% endfor %}
+{% endblock %}
+

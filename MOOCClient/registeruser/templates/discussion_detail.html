@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+{% for m in messages_list %}
+
+
+    {% for k,v in m.items %}
+        
+    {% if k == "content" %}
+     <p>{{ v }}</p>
+    {% endif %}
+
+    {% if k == "created_by" %}
+    <p><strong>{{ v }}</strong>
+    {% endif %}
+
+    {% if k == "created_at" %}        
+        <small>on {{ v }}</small></p>
+          
+    {% endif %}  
+    
+     
+
+    {% endfor %}
+{% endfor %}
+
+{{ errors}}
+<h2>Add a comment</h2>
+<form action="/discussion_detail/{{ disid }}/add/" method="GET">
+<table>
+    <tr>
+    <td> Discussion id </td>
+    <td><input type="text" name="disid" value = "{{ disid }}"> </td>
+    </tr>
+    <tr>
+            <td>Comment</td>
+        <td><input type="text" name="content"></td>
+    </tr>
+    <tr>
+            <td>Email</td>
+        <td><input type="text" name="created_by"></td>
+    </tr>
+    
+      
+
+</table>    
+    <input type="submit" value="comment">
+
+</form>
+
+
+
+{% endblock %}

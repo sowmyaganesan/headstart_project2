@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+{% for c in category %}
+    {% for k,v in c.items %}
+	    {% if k == "id" %}
+            	<p>id : {{ v }}</p>
+        	{% endif %}
+	      {% if k == "title" %}
+            	<p>Title : {{ v }}</p>
+        	{% endif %}
+             {% if k == "section" %}
+            	<p>Section : {{ v }}</p>
+        	{% endif %}
+	     {% if k == "dept" %}
+            	<p>dept : {{ v }}</p>
+        	{% endif %}
+	     {% if k == "term" %}
+            	<p>term : {{ v }}</p>
+        	{% endif %}
+	     </p>   
+    {% endfor %}
+    {% endfor %}
+{% endblock %}
+
+
+	    

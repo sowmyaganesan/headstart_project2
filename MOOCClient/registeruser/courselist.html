@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% for k,v in courses.items %}
+
+	      {% if k == "title" %}
+            	<h2>{{ v }}</h2>
+        	{% endif %}
+
+	      {% if k == "term" %}
+            	<p>{{ v }}</p>
+        	{% endif %} 
+	      
+	      {% if k == "section" %}
+            	<p>section : {{ v }}</p>
+        	{% endif %}
+             {% if k == "days" %}
+            	<p>days : {{ v }}</p>
+        	{% endif %}
+	     {% if k == "number" %}
+            	<p>number : {{ v }}</p>
+        	{% endif %}
+	     {% if k == "dept" %}
+            	<p>dept : {{ v }}</p>
+        	{% endif %}
+	     {% if k == "year" %}
+            	<p>year : {{ v }}</p>
+        	{% endif %}
+ 	     {% if k == "_id" %}
+            	<p>id : {{ v }}</p>
+        	{% endif %}
+	     {% if k == "teacher" %}
+            	<p>teacher : {{ v }}</p>
+        	{% endif %}
+	     </p>
+	    </tr>
+	    </table>
+      
+    {% endfor %}
+{% endblock %}
+
+
+	    

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+<head>
+<style>
+
+</style>
+</head>
+{% block content %}
+
+
+<p> update Course </p>
+
+<form action="/updatecourse/" method="get">
+<table>
+<tr>
+<td>Search document by id </td>
+<td><input type="text" name="courseid"/></td>
+</tr>
+<tr>
+<td> Select update by category </td>
+<td><select name="field">
+	<option value="Title">Title</option>
+	<option value="Term">Term</option>
+	<option value="Section">Section</option>
+	<option value="Department">Department</option>
+	<option value="Section">Section</option>
+	<option value="Instructorname"> Instructor Name</option>
+	<option value="Instructorid">Instructor Id</option>
+	<option value="Days">Days</option>
+	<option value="Time">Time</option>
+	<option value="All">All</option>
+   </select> </td>
+</tr>
+</table>
+<input type="submit" value="add">
+ </form>
+{% if value %}
+    {{value}}
+{% endif %}
+{% endblock %}

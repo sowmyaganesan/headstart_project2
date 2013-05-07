@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<p> update Course </p>
+
+<form action="/delete-course/" method="POST">{% csrf_token %}
+<table>
+<tr>
+<td>Course Id </td>
+<td><input type="text" name="courseid"/></td>
+</tr>
+<tr>
+<td>
+<input type="submit" value="Delete"></td>
+</tr>
+</table>
+<div style="color:red">{{errors}}</div>
+<div style="color:green">{{success}}</div>
+ </form>
+
+{% endblock %}

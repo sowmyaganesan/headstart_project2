@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+<head>
+<style>
+
+</style>
+</head>
+{% block content %}
+
+
+<p> update Quiz </p>
+
+<form action="/update-quiz/" method="POSt"> {% csrf_token %}
+<table>
+<tr>
+<td>Quiz id</td>
+<td><input type="text" name="quizid"/></td>
+</tr>
+<tr>
+<td> Select Questions for the quiz</td>
+<td><select name="questions">
+	<option value="q1">Question 1</option>
+	<option value="q2">Question 2</option>
+	<option value="q3">Question 3</option>
+	<option value="All">All</option>
+   </select> </td>
+</tr>
+
+<tr>
+<td>Update Options:</td>
+<td><input type="text" name="opt1"/></td>
+</tr>
+<td>Update Correct Answer and Points:</td>
+<td><input type="text" name="an1"/></td><td><input type="text" name="pt1"/></td>
+</tr>
+
+
+
+</table>
+<input type="submit" value="Update">
+<div style="color:red">
+		{% for k in errors %}
+		<br>{{k}}<br>
+		{% endfor %}</div>
+ </form>
+{% if value %}
+    {{value}}
+{% endif %}
+{% endblock %}

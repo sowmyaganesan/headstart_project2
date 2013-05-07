@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<p> Delete Announcement</p>
+
+<form action="/deleteannounce/" method="POST">{% csrf_token %}
+<table>
+<tr>
+<td>Announcement Id </td>
+<td><input type="text" name="announceid"/></td>
+</tr>
+<tr>
+<td>
+<input type="submit" value="Delete"></td>
+</tr>
+</table>
+<div style="color:red">{{errors}}</div>
+
+<div style="color:green">{{success}}</div>
+</form>
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+<head>
+<style>
+
+</style>
+</head>
+{% block content %}
+
+
+<p>   Add Category </p>
+  <form action="/add-category/" method="post">{% csrf_token %}
+		<table>
+		<tr>
+			<td>Name</td>
+			<td><input type="text" name="name"/></td>
+		</tr>
+				
+		<tr>
+			<td>Description</td>
+			<td><input type="text" name="description"/></td>
+		</tr>
+		
+		<tr>
+			<td>Create Date</td>
+			<td><input type="date" name="createDate" id="createDate"/></td>
+		</tr>
+
+		<tr>
+			<td>Status</td>
+			<td><input type="text" name="status"/></td>
+		</tr>
+		
+		</table>
+		<div style="color:red">
+		{% for k in errors %}
+		<br>{{k}}<br>
+		{% endfor %}</div>
+
+		<div style="color:green">
+		{{success}}
+		</div>
+        <input type="submit" value="add">
+    </form>
+{% endblock %}

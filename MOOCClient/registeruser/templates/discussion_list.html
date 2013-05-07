@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% csrf_token %}
+{% for d in discussion_list %}
+
+    {% for k,v in d.items %}
+       
+	{% if k == "id" %}
+	<h2><a href="/discussion_detail/{{ v }}"> {{ v }}</a></h2>
+	{% endif %}
+
+	{% if k == "title" %}
+	<h3> {{ v }} </h3>
+	{% endif %}
+
+	{% if k == "description" %}        
+		<p> {{ v | truncatewords:40 }}</p>
+	      
+	{% endif %}   
+	
+    {% endfor %}
+{% endfor %}
+{% endblock %}

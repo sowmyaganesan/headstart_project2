@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+<head>
+<style>
+
+</style>
+</head>
+{% block content %}
+
+
+<p> Add Announcements </p>
+  <form action="/adddiscuss/" method="post">{% csrf_token %}
+		<table>
+		<tr>
+			<td>Title</td>
+			<td><input type="text" name="title"/></td>
+		</tr>
+		
+		<tr>
+			<td>Created by</td>
+			<td><input type="text" name="created_by"/></td>
+		</tr>
+		
+		<tr>
+			<td>Created at</td>
+			<td><input type="date" name="created_at" id="updated_at"/></td>
+		</tr>
+		
+		<tr>
+			<td>Updated at</td>
+			<td><input type="date" name="updated_at" id="updated_at"/></td>
+		</tr>
+		
+		</table>
+		<div style="color:red">
+		{% for k in errors %}
+		<br>{{k}}<br>
+		{% endfor %}</div>
+
+		<div style="color:green">
+		{{success}}
+		</div>
+        <input type="submit" value="add">
+    </form>
+{% endblock %}

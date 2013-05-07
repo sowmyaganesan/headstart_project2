@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+<head>
+<style>
+
+</style>
+</head>
+{% block content %}
+
+
+<p> Add Course </p>
+  <form action="/add-course/" method="post">{% csrf_token %}
+		<table>
+		<tr>
+			<td>Term</td>
+			<td><select name = "term">
+			  <option name="term" value="Spring">Spring</option>
+			  <option name="term" value="Fall">Fall</option>
+			  <option name="term" value="Summer">Summer</option>
+			  <option name="term" value="Winter">Winter</option>
+			</select> </td>
+		</tr>
+		
+		<tr>
+			<td>Title</td>
+			<td><input type="text" name="title"/></td>
+		</tr>
+		
+		<tr>
+			<td>Section</td>
+			<td><input type="text" name="section"/></td>
+		</tr>
+		
+		<tr>
+			<td>Department</td>
+			<td><input type="text" name="department"/></td>
+		</tr>
+		
+		<tr>
+			<td>Teacher Name</td>
+			<td><input type="text" name="teachername"/></td>
+		</tr>
+
+		<tr>
+			<td>Teacher Id</td>
+			<td><input type="text" name="teacherid"/></td>
+		</tr>
+		
+		<tr>
+			<td>Days</td>
+			<td><select name="days">
+			  <option name="days" value="Monday">Monday</option>
+			  <option name="days" value="Tuesday">Tuesday</option>
+			  <option name="days" value="Wednesday">Wednesday</option>
+			  <option name="days" value="Thursday">Thursday</option>
+			  <option name="days" value="Friday">Friday</option>
+			</select> </td>
+		</tr>
+		
+		<tr>
+			<td>Time</td>
+			<td><input type="time" name="time1" id="time1" /></td>
+		</tr>
+		</table>
+		<div color="red">
+		{% for k in errors %}
+		<br>{{k}}<br>
+		{% endfor %}</div>
+        <input type="submit" value="add">
+    </form>
+{% endblock %}

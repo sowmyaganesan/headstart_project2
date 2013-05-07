@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+{% for c in category%}
+    {% for k,v in c.items %}
+
+	      {% if k == "id" %}
+            	<p>id : {{ v }}</p>
+        	{% endif %}
+	      {% if k == "name" %}
+            	<p>Name : {{ v }}</p>
+        	{% endif %}
+             {% if k == "description" %}
+            	<p>Description : {{ v }}</p>
+        	{% endif %}
+	     {% if k == "createDate" %}
+            	<p>createDate : {{ v }}</p>
+        	{% endif %}
+	     {% if k == "status" %}
+            	<p>status : {{ v }}</p>
+        	{% endif %}
+	     </p>   
+    {% endfor %}
+ {% endfor %}
+{% endblock %}
+
+
+	    

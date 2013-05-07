@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+  
+    {% for k,v in announce.items %}
+ 
+	      {% if k == "title" %}
+            	<p>title : {{ v }}</p>
+        	{% endif %}
+	      {% if k == "courseId" %}
+            	<p>courseId : {{ v }}</p>
+        	{% endif %}
+             {% if k == "description" %}
+            	<p>Description : {{ v }}</p>
+        	{% endif %}
+	     {% if k == "postDate" %}
+            	<p>postDate : {{ v }}</p>
+        	{% endif %}
+	     {% if k == "status" %}
+            	<p>status : {{ v }}</p>
+        	{% endif %}
+	     </p>   
+    {% endfor %}
+
+{% endblock %}
+
+
+	    

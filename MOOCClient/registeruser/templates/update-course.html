@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+<head>
+
+<script>  
+function showme(){  
+var s = document.form1.field;  
+var h = document.form1.ufield;  
+h.style.visibility="visible";  
+ 
+}  
+</script>  
+
+
+</head>
+{% block content %}
+
+
+<p> update Course </p>
+
+<form action="/update-course/" method="POST">{% csrf_token %}
+<table>
+<tr>
+<td>Search document by id </td>
+<td><input type="text" name="courseid"/>{{courseid}}</td>
+</tr>
+<tr>
+<td> Select update by category </td>
+<td><select name="field">
+	<option value="title">Title</option>
+	<option value="term">Term</option>
+	<option value="section">Section</option>
+	<option value="department">Department</option>
+	<option value="days">Days</option>
+	<option value="time">Time</option>
+	<option value="version">version</option>
+	<option value="Description">Description</option>
+	<option value="all">All</option>
+   </select> </td>
+</tr>
+<tr>
+<td>Value</td>
+<td><input type ="text" name="ufield"></td>
+<td>
+To update 'All' fields type all in Value</td>
+</tr>
+<tr>
+<td>
+<input type="submit" value="Update"></td>
+</tr>
+</table>
+<div style="color:red">{{errors}}</div>
+<div style="color:green">{{values}}</div>
+ </form>
+
+{% endblock %}

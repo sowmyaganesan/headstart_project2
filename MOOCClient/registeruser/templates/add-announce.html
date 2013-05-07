@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+<head>
+<style>
+
+</style>
+</head>
+{% block content %}
+
+
+<p> Add Announcements </p>
+  <form action="/add-announce/" method="post">{% csrf_token %}
+		<table>
+		<tr>
+			<td>Title</td>
+			<td><input type="text" name="title"/></td>
+		</tr>
+		
+		<tr>
+			<td>Course Id</td>
+			<td><input type="text" name="courseId"/></td>
+		</tr>
+		
+		<tr>
+			<td>Description</td>
+			<td><input type="text" name="description"/></td>
+		</tr>
+		
+		<tr>
+			<td>Post Date</td>
+			<td><input type="date" name="postDate" id="postDate"/></td>
+		</tr>
+
+		<tr>
+			<td>Status</td>
+			<td><input type="text" name="status"/></td>
+		</tr>
+		
+		</table>
+		<div style="color:red">
+		{% for k in errors %}
+		<br>{{k}}<br>
+		{% endfor %}</div>
+
+		<div style="color:green">
+		{{success}}
+		</div>
+        <input type="submit" value="add">
+    </form>
+{% endblock %}

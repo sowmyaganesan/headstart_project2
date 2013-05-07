@@ -1,0 +1,10 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+  <form action="/search/" method="get">
+        Search Quiz by Id : <input type="text" name="id"/>
+        <input type="submit" value="Search">
+	<div style="color:red" >{{ errors }} </div>
+    </form>
+{% endblock %}
