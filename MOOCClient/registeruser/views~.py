@@ -16,6 +16,9 @@ from django.contrib.auth import authenticate, login, logout
 import sys
 from django.contrib.auth.models import User
 
+
+
+
 def home(request):
 	r =  requests.get('http://localhost:8080/rest/course/doc1')
         courses=r.json()
@@ -158,6 +161,10 @@ def deletecourse(request):
 
 
 ######################
+
+
+
+
 
 #announcement - add
 
@@ -321,9 +328,9 @@ def searchcategory(request):
                    print (request.GET['category'])
                    r =  requests.get('http://localhost:8080/course/findcategory/%s' % request.GET['category'])
                    if r.status_code == 404:
-                           return render(request,'search-category.html',{'errors': 'No courses in that category'},context_instance=RequestContext(request))
-                   if r.status_code == 200:
-                        category = r.json()
+                           return render(request,'search-category.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
+                   else:
+                        category=r.json()
                         return render_to_response('categorylist.html',{'category':category})
 
 #display all category
@@ -669,8 +676,6 @@ def displaymessage(request,*args, **kwargs):
                 if r.status_code == 200:
                         message=r.json()
                         return render_to_response('discussion_detail.html',{'messages_list': message, 'disid' : v['id']})
-		if r.status_code == 404:
-			return render_to_response('discussion_detail.html')
 
 #Login Related Functions
 
