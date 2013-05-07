@@ -6,6 +6,7 @@ from json import JSONEncoder
 from bson.objectid import ObjectId
 from bson import json_util
 import urlparse
+from dao.mongo import Storage
 
  
 connection = Connection('localhost', 27017)
@@ -517,6 +518,22 @@ def get_document():
     if not json_docs:
         abort(404,'No document')
     return json_docs
-    
+
+
+"""
+User Related - Vaishak
+"""
+@route('/user', method='POST')
+def user_add():
+    output = None
+    result = Storage().insert(request.json,)
+    print result
+    if result["res_code"] == 200:
+      output = {"success" : True, "id":result["id"]}
+    else:
+      output = {"success" : False}
+    response.status = result["res_code"]    
+    response.add_header("Content-Type", "application/json")   
+    return output
 run(host='localhost', port=8080)
  

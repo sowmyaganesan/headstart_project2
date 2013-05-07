@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<form name="MyForm" class="form-horizontal" action="/add_user" method="post">{{message}}
+  <h2 class="form-signin-heading">Please sign up</h2>
+  <div class="control-group">
+   <label class="control-label" for="email">Email</label>
+   <div class="controls">
+    <input type="text" class="input-medium" placeholder="Email address" name="email">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="password">Password</label>
+  <div class="controls">
+    <input type="password" class="input-medium" placeholder="Password" name="password">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="confirmPassword">Confirm Password</label>
+  <div class="controls">
+    <input type="password" class="input-medium" placeholder="Confirm Password" name="confirmPassword">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="firstname">First Name</label>
+  <div class="controls">
+    <input type="text" class="input-medium" placeholder="First Name" name="firstname">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="lastname">Last Name</label>
+  <div class="controls">
+    <input type="text" class="input-medium" placeholder="Last Name" name="lastname">
+  </div>
+</div>
+<div class="control-group">
+  <div class="controls">
+    <button class="btn btn-medium btn-primary" type="submit">Sign up</button>
+  </div>
+</div>
+</form>
+{% endblock %}

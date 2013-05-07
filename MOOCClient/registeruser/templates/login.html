@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="main-container">
+  <div class="main wrapper clearfix">
+    <article>
+      <form name="LoginForm" class="form-signin" action="/login" method="POST">{{ message }}
+
+            <h2 class="form-signin-heading">Please sign in</h2>
+            <input type="text" class="input-medium" placeholder="Email address" name="email">
+            <input type="password" class="input-medium" placeholder="Password" name="password"><br>
+            <button class="btn btn-medium btn-primary" type="submit">Sign in</button>
+        <h4>Not Registered Yet ?</h4>
+        <a href="/signup"><button class="btn btn-medium btn-primary" type="button">Register</button></a>
+      </form>
+    </article>
+  </div> <!-- #main -->
+</div> <!-- #main-container -->
+{% endblock %}

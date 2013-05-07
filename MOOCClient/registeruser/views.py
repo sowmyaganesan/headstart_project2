@@ -12,6 +12,10 @@ from time import gmtime, strftime
 from django.core.context_processors import csrf
 from django.core.context_processors import csrf
 import urlparse
+from django.contrib.auth import authenticate, login, logout
+import sys
+from django.contrib.auth.models import User
+
 
 
 
@@ -673,7 +677,67 @@ def displaymessage(request,*args, **kwargs):
                         message=r.json()
                         return render_to_response('discussion_detail.html',{'messages_list': message, 'disid' : v['id']})
 
-             
+#Login Related Functions
+
+#Login - Signup
+def signup(request):
+   return render_to_response("signup.html")
+
+#Login - Signin
+def signin(request):
+   return render_to_response("login.html")
+
+#Login - Login
+def login_user(request):
+    email = request.POST['email']
+    password = request.POST['password']
+    user = authenticate(username=email, password=password)
+    if user is not None:
+        if user.is_active:
+            login(request, user)
+            print user.first_name
+            ctx = {"fName": user.first_name, "lName": user.last_name }
+            return render_to_response("home.html",ctx,context_instance=RequestContext(request))
+        else:
+            ctx = {"message" :"Login Failed. Please try Again"}
+            return render_to_response("login.html",ctx,context_instance=RequestContext(request))
+    else:
+        ctx = {"message" :"Login Failed. Please try Again"}
+        return render_to_response("login.html",ctx,context_instance=RequestContext(request))
+
+#Login - Logout
+def logout_user(request):
+    logout(request)
+    return render_to_response('login.html')
+
+#Login - Register
+def add_user(request):
+	ctx = {}
+	if request.method == "POST" :
+		email = request.POST.get("email")
+		password = request.POST.get("password")
+		firstname = request.POST.get("firstname")
+		lastname = request.POST.get("lastname")
+	try:
+		djangouser = User.objects.create_user(email,email,password)
+		djangouser.first_name = firstname
+		djangouser.last_name = lastname
+		djangouser.save()
+		#ctx = {"message" : "User successfully registered, please login to continue."}
+		#return render_to_response("login.html",ctx,context_instance=RequestContext(request))
+	except NameError(" error"):
+		print "Unexpected error:", sys.exc_info()[0]
+		ctx = {'message':'User ID already exists.'}
+		return render_to_response("signup.html",ctx,context_instance=RequestContext(request))
+	payload = {"email":email, "own":[], "enrolled":[], "quizzes":[]} 
+	response = requests.post("http://127.0.0.1:8080/user", data=json.dumps(payload), headers={'content-type': 'application/json', 'charset': 'utf-8'})
+	if response.status_code == 200:
+		ctx = {"message" : "User successfully registered, please login to continue."}
+		return render_to_response("login.html",ctx)
+	ctx = {"message":"Failed to register"}
+	return render_to_response("signup.html",ctx)
+
+
 
 
 

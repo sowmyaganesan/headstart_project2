@@ -1,30 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>MOOC</title>
-    <link href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.css" rel="stylesheet">
-    <style>.content {padding-top: 80px;}</style>
-  </head>
-
-  <body>
-
-    <div class="topbar">
-      <div class="fill">
-        <div class="container">
-          <h1><a href="/" class="brand">MOOC</a>! <small>Start Learning</small></h1>
-        </div>
+<head>
+  <meta charset="utf-8">
+  <title>MOOC</title>
+  {% load staticfiles %}
+  <link href="{% static "css/bootstrap.css"%}" rel="stylesheet">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>  
+  <script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-dropdown.js"></script>
+  <style>.content {padding-top: 80px;}</style>
+</head>
+<body>
+  <!--<div class="topbar">
+    <div class="fill">
+      <div class="container">
+        <h1><a href="/" class="brand">MOOC!</a> <small>Start Learning</small></h1>
       </div>
     </div>
+  </div>-->
+  {% block top_nav %}
+  <div class="navbar navbar-fixed-top">  
+    <div class="navbar-inner">  
+      <div class="container">  
+        <ul class="nav">  
+          <li class="active">  
+            <a class="brand" href="#">Moo!</a>  
+          </li>  
+        </ul>  
+        <ul class="nav">  
+          <li class="dropdown">  
+            <a href="#"  
+            class="dropdown-toggle"  
+            data-toggle="dropdown">  
+            Courses  
+            <b class="caret"></b>  
+          </a>  
+          <ul class="dropdown-menu">  
+           <li><a href="search-form/"> Search Course </a></li>
+           <li><a href="add-course/"> Add Course </a></li>
+           <li><a href="update-course/"> Update Course </a></li>
+           <li><a href="delete-course/"> Delete Course </a></li>
+         </ul>  
+       </li> 
+       <li class="dropdown">  
+        <a href="#"  
+        class="dropdown-toggle"  
+        data-toggle="dropdown">  
+        Announcements  
+        <b class="caret"></b>  
+      </a>  
+      <ul class="dropdown-menu">  
+       <li><a href="search-announce/"> Search Announcement by id </a></li>
+       <li><a href="add-announce/"> Add Announcement </a></li>
+       <li><a href="update-announce/"> Update Announcement </a></li>
+       <li><a href="delete-announce/"> Delete Announcement </a></li>
+       <li><a href="all-announce/"> List All</a></li>
+     </ul>  
+   </li> 
+   <li class="dropdown">  
+    <a href="#"  
+    class="dropdown-toggle"  
+    data-toggle="dropdown">  
+    Discussion  
+    <b class="caret"></b>  
+  </a>  
+  <ul class="dropdown-menu">  
+   <li><a href="add-discuss/"> Add Discussion </a></li>
+   <li><a href="delete-discuss/"> Delete Discussion </a></li>
+   <li><a href="discussion_list/"> Discussion List</a></li>
+ </ul>  
+</li> 
+<li class="dropdown">  
+  <a href="#"  
+  class="dropdown-toggle"  
+  data-toggle="dropdown">  
+  Category  
+  <b class="caret"></b>  
+</a>  
+<ul class="dropdown-menu">  
+ <li><a href="add-category/"> Add Category </a></li>
+ <li><a href="search-category/"> Search courses by category </a></li>
+ <li><a href="all-category/"> List All</a></li>
+</ul>  
+</li> 
+<li class="dropdown">  
+  <a href="#"  
+  class="dropdown-toggle"  
+  data-toggle="dropdown">  
+  Quiz  
+  <b class="caret"></b>  
+</a>  
+<ul class="dropdown-menu">  
+ <li><a href="delete-quiz/"> Delete Quiz </a></li>
+ <li><a href="search_quiz/"> Search Quiz </a></li>
+ <li><a href="add-quiz/"> Add Quiz </a></li>
+ <li><a href="update-quiz/"> Update Quiz </a></li>
+</ul>  
+</li>  
+</ul>
+</div>  
+</div>  
+</div> 
+{% endblock %}
 
-    <div class="container">
-      <div class="content">
-        {% block page_header %}{% endblock %}
-        {% block content %}{% endblock %}
 
-      </div>
-    </div>
+<div class="container">
+  <div class="content">
+    {% block page_header %}{% endblock %}
+    {% block content %}{% endblock %}
 
-  </body>
+  </div>
+</div>
+
+</body>
 </html>
 
