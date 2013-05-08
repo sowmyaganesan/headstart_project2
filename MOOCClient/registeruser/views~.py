@@ -15,6 +15,7 @@ import urlparse
 from django.contrib.auth import authenticate, login, logout
 import sys
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 
 def home(request):
 	r =  requests.get('http://localhost:8080/rest/course/doc1')
@@ -26,7 +27,7 @@ def search_form(request):
     return render(request, 'search_form.html')
 
 def frontpage(request):
-    return render_to_response('frontpage.html')
+    return render_to_response('frontpage.html',context_instance=RequestContext(request))
 
 # Search Course by id
 
@@ -40,9 +41,17 @@ def search(request):
 	   	courses=r.json()
 	   	return render_to_response('courselist.html',{'courses': courses})
 
+
 # ADD course
 def addcourse(request):
     errors = []
+    if request.method != 'POST':
+        r =  requests.get('http://localhost:8080/course/list')
+        result = r.json()
+        print(result)
+            
+        return render(request, 'add-course.html',{'result': result},context_instance=RequestContext(request)) 
+
     if request.method == 'POST':
         if not request.POST.get('title', ''):
             errors.append('Enter the Title')
@@ -54,9 +63,7 @@ def addcourse(request):
             errors.append('Enter the instructorname')
 	if not request.POST.get('instructorid', ''):
             errors.append('Enter the instructorid')
- 
 
- ###### check category
 
         if not errors:
             if not request.POST.get('id', ''):
@@ -77,7 +84,7 @@ def addcourse(request):
 	    version = request.POST['version']
             addstr = {"id": id1,"category": category,"term": term,"title": title,"section": section ,"dept":department,"instructor": [name,tid],"days": days,"hours": time,"Description":Description,"version":version}
 	    coursejson=simplejson.dumps(addstr)
-	    
+
 	    print(coursejson)
 	    addurl = "http://localhost:8080/course"
 	    r = requests.post(addurl, data=coursejson, allow_redirects=True)
@@ -85,6 +92,9 @@ def addcourse(request):
 	    # response = urllib2.urlopen(addurl, coursejson)
 	    return render(request, 'add-course.html',{'sucess': 'Success'},context_instance=RequestContext(request))
     return render(request, 'add-course.html',{'errors': errors},context_instance=RequestContext(request))
+
+
+
 
 # Update Course
 def updatecourse(request):
@@ -118,6 +128,13 @@ def updatecourse(request):
 # DELETE Course
 def deletecourse(request):
     errors = []
+    if request.method != 'POST':
+        r =  requests.get('http://localhost:8080/course/list')
+        result = r.json()
+        print(result)
+            
+        return render(request, 'delete-course.html',{'result': result},context_instance=RequestContext(request)) 
+
     ann_status = 'yes'
     dis_status = 'yes'
     if request.method == 'POST':
@@ -129,8 +146,6 @@ def deletecourse(request):
 	    if r.status_code == 404:
 		return render(request, 'delete-course.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
 	    if r.status_code == 200:
-	   	# include check on user table to see if anyone s enrolled in course
-		# do delete quiz 
 	        r =  requests.get('http://localhost:8080/announcement/findcourse/%s' % request.POST['courseid'])
 	        if r.status_code == 200:
 		   # delete all announcement under the course id
@@ -138,16 +153,13 @@ def deletecourse(request):
 		   ann_status='yes'
 		   print(ann_status)
 		
-		# delete all discusssions under the course id
 		r =  requests.get('http://localhost:8080/discussion/%s' % request.POST['courseid'])
 	        if r.status_code == 200:
 	           r =  requests.delete('http://localhost:8080/discussion/course/%s' % request.POST['courseid'])
 	           dis_status='yes'
 		   print(dis_status)
 
-	       #do delete all Quiz under the course id
-		
-		
+	      		
 			
 		if (ann_status == 'yes' and dis_status == 'yes'):
 		   	re =  requests.delete('http://localhost:8080/course/%s' % request.POST['courseid'])   
@@ -250,6 +262,13 @@ def updateannouncement(request):
 # DELETE Announcement
 def deleteannounce(request):
     errors = []
+    if request.method != 'POST':
+        r =  requests.get('http://localhost:8080/announcement/list')
+        result = r.json()
+        print(result)
+            
+        return render(request, 'delete-announce.html',{'result': result},context_instance=RequestContext(request)) 
+
     if request.method == 'POST':
         if not request.POST.get('announceid', ''):
             errors.append('Enter the announcementId')
@@ -312,14 +331,18 @@ def addcategory(request):
 
 def search_category(request):
     print ('helo')
-    return render(request, 'search-category.html')
+    if request.method != 'POST':
+        	r =  requests.get('http://localhost:8080/category/list')
+       		result = r.json()
+        	print(result)
+            
+        	return render(request, 'search-category.html',{'result': result},context_instance=RequestContext(request)) 
 
 
 def searchcategory(request):
            print ('here')
-           if 'category' in request.GET:
-                   print (request.GET['category'])
-                   r =  requests.get('http://localhost:8080/course/findcategory/%s' % request.GET['category'])
+	           if request.method == 'POST':
+                  	 r =  requests.get('http://localhost:8080/course/findcategory/%s' % request.POST['category'])
                    if r.status_code == 404:
                            return render(request,'search-category.html',{'errors': 'No courses in that category'},context_instance=RequestContext(request))
                    if r.status_code == 200:
@@ -373,6 +396,12 @@ def adddiscuss(request):
 # DELETE Discussion
 def deletediscuss(request):
     errors = []
+    if request.method != 'POST':
+        r =  requests.get('http://localhost:8080/discussion/list')
+        result = r.json()
+        print(result)
+            
+        return render(request, 'delete-discuss.html',{'result': result},context_instance=RequestContext(request)) 
     if request.method == 'POST':
         if not request.POST.get('discussid', ''):
             errors.append('Enter the DiscussionId')
@@ -473,7 +502,7 @@ def addquiz(request):
             r = requests.post(addurl, data=quizjson, allow_redirects=True)
             print r.content
             # response = urllib2.urlopen(addurl, coursejson)
-            return render(request,'add-quiz.html',{'Successfully added'},context_instance=RequestContext(request))
+            return render(request,'add-quiz.html',{'success':'Sucessfully added'},context_instance=RequestContext(request))
     return render(request, 'add-quiz.html',{'errors': errors},context_instance=RequestContext(request))
  
 def search_course_id(id):
@@ -680,10 +709,20 @@ def signup(request):
 
 #Login - Signin
 def signin(request):
-   return render_to_response("login.html")
+	ctx = {}
+	if request.user.is_authenticated():
+		return render_to_response("home.html",ctx,context_instance=RequestContext(request))
+	else:
+		return render_to_response("login.html")
 
 #Login - Login
 def login_user(request):
+    ctx = {}
+    if request.user.is_authenticated():
+        return render_to_response("home.html",ctx,context_instance=RequestContext(request))
+    if request.method != 'POST':
+    	ctx={"message":"You are not logged in."}
+    	return render_to_response("login.html",ctx,context_instance=RequestContext(request))
     email = request.POST['email']
     password = request.POST['password']
     user = authenticate(username=email, password=password)
@@ -724,6 +763,10 @@ def add_user(request):
 		print "Unexpected error:", sys.exc_info()[0]
 		ctx = {'message':'User ID already exists.'}
 		return render_to_response("signup.html",ctx,context_instance=RequestContext(request))
+	except IntegrityError:
+		print "Unexpected error:", sys.exc_info()[0]
+		ctx = {'message':'User ID already exists.'}
+		return render_to_response("signup.html",ctx,context_instance=RequestContext(request))
 	payload = {"email":email, "own":[], "enrolled":[], "quizzes":[]} 
 	response = requests.post("http://127.0.0.1:8080/user", data=json.dumps(payload), headers={'content-type': 'application/json', 'charset': 'utf-8'})
 	if response.status_code == 200:
@@ -732,7 +775,48 @@ def add_user(request):
 	ctx = {"message":"Failed to register"}
 	return render_to_response("signup.html",ctx)
 
+def update_user(request):
+	ctx={}
+	if not(request.user.is_authenticated()):
+		ctx={"message":"You are not logged in."}
+		return render_to_response("login.html",ctx,context_instance=RequestContext(request))
+	if request.method != 'POST':
+		return render_to_response("updateprofile.html",ctx,context_instance=RequestContext(request))
+	password = request.POST['password']
+	firstname = request.POST.get('firstname')
+	lastname = request.POST.get('lastname')
+	if len(password.strip())>0:
+		print len(password)
+		request.user.set_password(password)
+	if firstname is not None:
+		request.user.first_name = firstname
+	if lastname is not None:
+		request.user.last_name = lastname
+	request.user.save()
 
+	return render_to_response('home.html',ctx,context_instance=RequestContext(request))
 
+def enroll_course(request):
+	ctx={}
+	if not(request.user.is_authenticated()):
+		ctx={"message":"You are not logged in."}
+		return render_to_response("login.html",ctx,context_instance=RequestContext(request))
+	
+	courseid = request.GET.get('id')
+	updateurl = "http://127.0.0.1:8080/course/enroll?email="+request.user.username+"&courseid="+courseid
+	responsecode = requests.put(updateurl, headers={'content-type': 'application/json', 'charset': 'utf-8'})
+	ctx={"message":"You Have Been enrolled"}
+	#TODO: Redirect to home page
+	return render_to_response('home.html',ctx,context_instance=RequestContext(request))
 
-
+def drop_course(request):
+	ctx={}
+	if not(request.user.is_authenticated()):
+		ctx={"message":"You are not logged in."}
+		return render_to_response("login.html",ctx,context_instance=RequestContext(request))
+	courseid = request.GET.get('id')
+	dropurl = "http://127.0.0.1:8080/course/drop?email="+request.user.username+"&courseid="+courseid
+	responsecode = requests.put(dropurl, headers={'content-type': 'application/json', 'charset': 'utf-8'})
+	ctx={"message":"Course Dropped"}
+	#TODO: Redirect to home page
+	return render_to_response('home.html',ctx,context_instance=RequestContext(request))

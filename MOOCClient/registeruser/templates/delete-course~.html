@@ -3,13 +3,24 @@
 {% block content %}
 
 
-<p> update Course </p>
+<p> Delete Course </p>
 
 <form action="/delete-course/" method="POST">{% csrf_token %}
 <table>
 <tr>
 <td>Course Id </td>
-<td><input type="text" name="courseid"/></td>
+    <td><select name = "id" >           
+            {% for a in result %}
+                    {% for k,v in a.items %}
+             {% if k == "id" %}
+               
+             <option>{{ v }}</option>
+                 {% endif %}
+              {% endfor %}
+            {% endfor %}
+	</select> </td>
+
+
 </tr>
 <tr>
 <td>

@@ -212,14 +212,38 @@ List course
 def get_document():
     cursor = db['coursecollection'].find()
     json_docs=[]
+    json_docs.append("[")
     for doc in cursor:
         json_doc=json.dumps(doc,default = json_util.default)
         json_docs.append(json_doc)
-        json_docs.append("")
-
+        json_docs.append(",")
+   
+    json_docs = json_docs[:-1]
+    json_docs.append("]")
     if not json_docs:
         abort(404,'No document')
     return json_docs
+
+""""
+Find all distinct category in course
+"""
+@route('/course/distinct', method='GET')
+def get_document():
+    cursor = db['coursecollection'].find()
+    json_docs=[]
+    json_docs.append("[")
+    for doc in cursor:
+        json_doc=json.dumps(doc,default = json_util.default)
+        json_docs.append(json_doc)
+        json_docs.append(",")
+   
+    json_docs = json_docs[:-1]
+    json_docs.append("]")
+    if not json_docs:
+        abort(404,'No document')
+    return json_docs
+
+
 """
 Get course by ID
 """
@@ -228,14 +252,18 @@ def get_document(id):
     regex = ".*"+id+".*";
     cursor = db['coursecollection'].find({"Description":{"$regex":regex}})
     json_docs=[]
+    json_docs.append("[")
     for doc in cursor:
         json_doc=json.dumps(doc,default = json_util.default)
         json_docs.append(json_doc)
-        json_docs.append("")
-
+        json_docs.append(",")
+    
+    json_docs = json_docs[:-1]
+    json_docs.append("]")
     if not json_docs:
         abort(404,'No document')
     return json_docs
+
 """
 Update course
 """
@@ -529,8 +557,9 @@ User Related - Vaishak
 """
 @route('/user', method='POST')
 def user_add():
+    print "Here"
     output = None
-    result = Storage().insert(request.json,)
+    result = Storage().insert(request.json)
     print result
     if result["res_code"] == 200:
       output = {"success" : True, "id":result["id"]}
@@ -539,5 +568,50 @@ def user_add():
     response.status = result["res_code"]    
     response.add_header("Content-Type", "application/json")   
     return output
+
+
+@route('/course/enroll', method='PUT')
+def course_enroll():
+   
+   output = None
+   email = str(request.query.get("email"))
+   course_id = str(request.query.get("courseid"))
+   
+   print email+"email"
+   print course_id+"course_id"
+
+   if course_id is not None:
+      responsecode = Storage().enroll_course(email, course_id)
+
+   if responsecode == 200:
+      output = {"success" : True}
+   else:
+      output = {"success" : False}
+
+   response.status = responsecode    
+   response.add_header("Content-Type", "application/json")
+   return output
+
+@route('/course/drop', method='PUT')
+def course_drop():
+   
+   output = None
+   email = str(request.query.get("email"))
+   course_id = str(request.query.get("courseid"))
+   
+   print email+"email"
+   print course_id+"course_id"
+
+   if course_id is not None:
+      responsecode = Storage().drop_course(email, course_id)
+
+   if responsecode == 200:
+      output = {"success" : True}
+   else:
+      output = {"success" : False}
+
+   response.status = responsecode    
+   response.add_header("Content-Type", "application/json")
+   return output  
+
 run(host='localhost', port=8080)
- 

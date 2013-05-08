@@ -212,14 +212,19 @@ List course
 def get_document():
     cursor = db['coursecollection'].find()
     json_docs=[]
+    json_docs.append("[")
     for doc in cursor:
         json_doc=json.dumps(doc,default = json_util.default)
         json_docs.append(json_doc)
-        json_docs.append("")
-
+        json_docs.append(",")
+   
+    json_docs = json_docs[:-1]
+    json_docs.append("]")
     if not json_docs:
         abort(404,'No document')
     return json_docs
+
+
 """
 Get course by ID
 """

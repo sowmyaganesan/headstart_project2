@@ -9,13 +9,22 @@
 <table>
 <tr>
 <td>Announcement Id </td>
-<td><input type="text" name="announceid"/></td>
+<td><select name = "announceid" >           
+            {% for a in result %}
+                    {% for k,v in a.items %}
+             {% if k == "id" %}
+               
+             <option>{{ v }}</option>
+                 {% endif %}
+              {% endfor %}
+            {% endfor %}
+	</select> </td>
 </tr>
 <tr>
-<td>
-<input type="submit" value="Delete"></td>
+
 </tr>
 </table>
+<input type="submit" value="Delete"></td>
 <div style="color:red">{{errors}}</div>
 
 <div style="color:green">{{success}}</div>

@@ -1,13 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <form action="/searchcategory/" method="get">
+  <form action="/searchcategory/" method="POST">{% csrf_token %}
         Search category : 
 	<select name="category">
-	<option value="Engineering">Engineering</option>
-	<option value="Arts"> Arts </option>
-	<option value="Chemistry">Chemistry</option>
-	</select>
+	 {% for a in result %}
+                    {% for k,v in a.items %}
+             {% if k == "name" %}
+               
+             <option>{{ v }}</option>
+                 {% endif %}
+              {% endfor %}
+            {% endfor %}
+	</select> </td>
+
+		
         <input type="submit" value="Search">
    </form>
 <div style="color:red" >{{ errors }} </div>
