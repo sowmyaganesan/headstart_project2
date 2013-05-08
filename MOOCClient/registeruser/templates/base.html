@@ -25,7 +25,8 @@
           <li class="active">  
             <a class="brand" href="#">Moo!</a>  
           </li>  
-        </ul>  
+        </ul> 
+        
         <ul class="nav">  
           <li class="dropdown">  
             <a href="#"  
@@ -95,8 +96,21 @@
  <li><a href="add-quiz/"> Add Quiz </a></li>
  <li><a href="update-quiz/"> Update Quiz </a></li>
 </ul>  
-</li>  
+</li>
+
+
 </ul>
+{% if user.is_authenticated %} 
+<ul class="nav pull-right">
+  <li class="dropdown"><a href="/logout"><button class="btn btn-primary" type="button">Logout</button></a></li>
+  <li class="dropdown"><a href="/update_user"><button class="btn btn-primary" type="button">Update Profile</button></a></li>
+</ul>
+{% else %}
+<ul class="nav pull-right">
+  <li class="dropdown"><a href="/signin"><button class="btn btn-primary" type="button">Login</button></a></li>
+  <li class="dropdown"><a href="/signup"><button class="btn btn-primary" type="button">Register</button></a></li>
+</ul>
+{% endif %}
 </div>  
 </div>  
 </div> 
