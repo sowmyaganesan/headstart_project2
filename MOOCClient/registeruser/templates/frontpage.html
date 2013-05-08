@@ -21,11 +21,9 @@
 			<p><a href="add-course/"> Add Course </a></p>
 			<p><a href="update-course/"> Update Course </a></p>
 			<p><a href="delete-course/"> Delete Course </a></p>-->
-			<select>
 				{% for course in courses%}
-				<option value={{course.id}}>{{course.Description}}</option>
+				<a href="/enroll_course/?id={{course.id}}">{{course.Description}}</a>
 				{% endfor %}
-			</select>
 		</div>
 	</div>
 </div>

@@ -364,13 +364,11 @@ def addcategory(request):
 #search category by id
 
 def search_category(request):
-    print ('helo')
-    if request.method != 'POST':
-        	r =  requests.get('http://localhost:8080/category/list')
-       		result = r.json()
-        	print(result)
-            
-        	return render(request, 'search-category.html',{'result': result},context_instance=RequestContext(request)) 
+	if request.method != 'POST':
+		r =  requests.get('http://localhost:8080/category/list')
+		result = r.json()
+		print(result)
+		return render(request, 'search-category.html',{'result': result},context_instance=RequestContext(request)) 
 
 
 def searchcategory(request):
@@ -724,7 +722,11 @@ def signin(request):
 def login_user(request):
     ctx = {}
     if request.user.is_authenticated():
-        return render_to_response("home.html",ctx,context_instance=RequestContext(request))
+		r =  requests.get('http://localhost:8080/category/list')
+		category=r.json()
+		r =  requests.get('http://127.0.0.1:8080/course/list')
+		courses=r.json()
+		return render_to_response('frontpage.html',{'category': category,'courses':courses},context_instance=RequestContext(request))    
     if request.method != 'POST':
     	ctx={"message":"You are not logged in."}
     	return render_to_response("login.html",ctx,context_instance=RequestContext(request))
@@ -733,10 +735,12 @@ def login_user(request):
     user = authenticate(username=email, password=password)
     if user is not None:
         if user.is_active:
-            login(request, user)
-            print user.first_name
-            ctx = {"fName": user.first_name, "lName": user.last_name }
-            return render_to_response("home.html",ctx,context_instance=RequestContext(request))
+			login(request, user)
+			r= requests.get('http://localhost:8080/category/list')
+			category=r.json()
+			r =  requests.get('http://127.0.0.1:8080/course/list')
+			courses=r.json()
+			return render_to_response('frontpage.html',{'category': category,'courses':courses},context_instance=RequestContext(request))   
         else:
             ctx = {"message" :"Login Failed. Please try Again"}
             return render_to_response("login.html",ctx,context_instance=RequestContext(request))
@@ -812,7 +816,7 @@ def enroll_course(request):
 	responsecode = requests.put(updateurl, headers={'content-type': 'application/json', 'charset': 'utf-8'})
 	ctx={"message":"You Have Been enrolled"}
 	#TODO: Redirect to home page
-	return render_to_response('home.html',ctx,context_instance=RequestContext(request))
+	return render_to_response('frontpage.html',ctx,context_instance=RequestContext(request))
 
 def drop_course(request):
 	ctx={}
