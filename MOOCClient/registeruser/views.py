@@ -297,7 +297,6 @@ def deleteannounce(request):
                 print ('else')
 		errors.append('No announcement to delete')
     		return render(request, 'delete-announce.html',{'error':errors},context_instance=RequestContext(request)) 
-    return render(request, 'delete-announce.html',{'error':'error'},context_instance=RequestContext(request)) 
 
 
 
@@ -315,6 +314,7 @@ def deleteannounce(request):
                         	return render(request, 'delete-announce.html',{'success': 'success'},context_instance=RequestContext(request))
 			else:
 				return render(request, 'delete-announce.html',{'errors': errors},context_instance=RequestContext(request))
+    return render(request,'delete-announce.html',{'error':'No announcement to delete'},context_instance=RequestContext(request))
 
 
 #display all announcements
@@ -696,9 +696,13 @@ def displaymessage(request,*args, **kwargs):
                 return render(request, 'discussion_detail.html',{'errors': errors},context_instance=RequestContext(request))
         else:
                 r=  requests.get('http://localhost:8080/message/%s' % v['id'])
+                print(v['id'])
                 if r.status_code == 200:
-                        message=r.json()
-                        return render_to_response('discussion_detail.html',{'messages_list': message, 'disid' : v['id']})
+                        message = r.json()
+                        if message:
+                            return render_to_response('discussion_detail.html',{'messages_list': message, 'disid' : v['id']})
+                        else:
+                            return render_to_response('discussion_detail.html')
 		if r.status_code == 404:
 			return render_to_response('discussion_detail.html')
 

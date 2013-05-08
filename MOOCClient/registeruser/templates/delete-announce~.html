@@ -11,12 +11,9 @@
 <td>Announcement Id </td>
 <td><select name = "announceid" >           
             {% for a in result %}
-                    {% for k,v in a.items %}
-             {% if k == "id" %}
-               
-             <option>{{ v }}</option>
-                 {% endif %}
-              {% endfor %}
+                                   
+             <option>{{ a.id }}</option>
+                
             {% endfor %}
 	</select> </td>
 </tr>
@@ -30,5 +27,5 @@
 <div style="color:green">{{success}}</div>
 </form>
 {{ errors }}
-<div style="color:red">{{errors}}</div>
+<div style="color:red">{{error}}</div>
 {% endblock %}

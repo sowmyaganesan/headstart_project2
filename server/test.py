@@ -137,7 +137,7 @@ List Discussion
 def get_document():
     cursor = db['discussioncollection'].find()
     if not cursor:
-		abort(404, 'No document with id %s' % id)
+        abort(404, 'No document with id %s' % id)
     response.content_type = 'application/json'
     entries = [entry for entry in cursor]
     return MongoEncoder().encode(entries)
@@ -233,7 +233,7 @@ def get_document(id):
     regex = ".*"+id+".*";
     cursor = db['coursecollection'].find({"Description":{"$regex":regex}})
     if not cursor:
-		abort(404, 'No document with id %s' % id)
+        abort(404, 'No document with id %s' % id)
     response.content_type = 'application/json'
     entries = [entry for entry in cursor]
     return MongoEncoder().encode(entries)
@@ -474,7 +474,8 @@ Get message by discussion id
 def get_message(id):
     cursor = db['messagecollection'].find({'discussion_id':id})
     if not cursor:
-		abort(404, 'No document with id %s' % id)
+        abort(404, 'No document with id %s' % id)
+	
     response.content_type = 'application/json'
     entries = [entry for entry in cursor]
     return MongoEncoder().encode(entries)
