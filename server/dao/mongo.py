@@ -36,3 +36,5 @@ class Storage(object):
 			return 200
 		except:
 			return 500
+
+	

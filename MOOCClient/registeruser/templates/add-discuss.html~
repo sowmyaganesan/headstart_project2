@@ -7,7 +7,7 @@
 {% block content %}
 
 
-<p> Add Discussion </p>
+<p> Add Announcements </p>
   <form action="/add-discuss/" method="post">{% csrf_token %}
 		<table>
 		<tr>
