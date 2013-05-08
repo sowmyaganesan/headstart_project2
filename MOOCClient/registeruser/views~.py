@@ -42,17 +42,18 @@ def search(request):
            r =  requests.get('http://localhost:8080/course/%s' % request.GET['id'])
 	   if r.status_code == 404:
 		return render(request, 'search_form.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
-	   else:
-	   	courses=r.json()
+	   if r.status_code == 200:
+	   	courses = r.json()
 	   	return render_to_response('courselist.html',{'courses': courses})
+           return render(request, 'search_form.html',{'status': r.status_code},context_instance=RequestContext(request))
 
 
 # ADD course
 def addcourse(request):
     errors = []
     if request.method != 'POST':
-        r =  requests.get('http://localhost:8080/course/list')
-        result = r.json()
+        r =  requests.get('http://localhost:8080/category/list')
+	result=r.json()
         print(result)
             
         return render(request, 'add-course.html',{'result': result},context_instance=RequestContext(request)) 
@@ -104,6 +105,10 @@ def addcourse(request):
 # Update Course
 def updatecourse(request):
     errors = []
+    if request.method != 'POST':
+    	r =  requests.get('http://127.0.0.1:8080/course/list')
+	courses=r.json()
+	return render(request, 'update-course.html',{'courses': courses},context_instance=RequestContext(request))
     if request.method == 'POST':
         if not request.POST.get('courseid', ''):
             errors.append('Enter the courseid')
@@ -239,6 +244,13 @@ def searchannouncement(request):
 # Update Announcement
 def updateannouncement(request):
     errors = []
+    if request.method != 'POST':
+        r =  requests.get('http://localhost:8080/announcement/list')
+        result = r.json()
+        print(result)
+            
+        return render(request, 'update-announce.html',{'result': result},context_instance=RequestContext(request)) 
+
     if request.method == 'POST':
         if not request.POST.get('announceid', ''):
             errors.append('Enter the announcement id')
@@ -269,10 +281,25 @@ def deleteannounce(request):
     errors = []
     if request.method != 'POST':
         r =  requests.get('http://localhost:8080/announcement/list')
-        result = r.json()
-        print(result)
-            
-        return render(request, 'delete-announce.html',{'result': result},context_instance=RequestContext(request)) 
+	print(r.status_code)
+
+	if r.status_code == 404:
+	   errors.append('No announcement to delete')
+	   return render(request, 'delete-announce.html',{'error':errors},context_instance=RequestContext(request)) 
+
+	if r.status_code == 200:
+           result = r.json()
+           print(result)
+	   if result:
+                print ('here11111')
+            	return render(request, 'delete-announce.html',{'result': result},context_instance=RequestContext(request)) 
+	   else:
+                print ('else')
+		errors.append('No announcement to delete')
+    		return render(request, 'delete-announce.html',{'error':errors},context_instance=RequestContext(request)) 
+    return render(request, 'delete-announce.html',{'error':'error'},context_instance=RequestContext(request)) 
+
+
 
     if request.method == 'POST':
         if not request.POST.get('announceid', ''):
@@ -283,10 +310,12 @@ def deleteannounce(request):
                 if r.status_code == 404:
                         return render(request, 'delete-announce.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
                 if r.status_code == 200:
-                        re =  requests.delete('http://localhost:8080/announcement/%s' % request.POST['announceid'])   
-                        return render(request, 'delete-announce.html',{'success': 'success'},context_instance=RequestContext(request))
+                        re =  requests.delete('http://localhost:8080/announcement/%s' % request.POST['announceid']) 
+                        if re.status_code == 200:  
+                        	return render(request, 'delete-announce.html',{'success': 'success'},context_instance=RequestContext(request))
+			else:
+				return render(request, 'delete-announce.html',{'errors': errors},context_instance=RequestContext(request))
 
-    return render(request, 'delete-announce.html',{'errors': errors},context_instance=RequestContext(request))
 
 #display all announcements
 def displayannounce(request):
@@ -573,7 +602,6 @@ def displaydiscussion(request):
                 return render(request, 'discussion_list.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
 	if r.status_code == 200:
                 discussion=r.json()
-                print(discussion)
                 return render_to_response('discussion_list.html',{'discussion_list': discussion})
 
 
@@ -585,33 +613,26 @@ def displaymessage(request,*args, **kwargs):
 	print(discussionurl)	
 	
         v = kwargs	
-	
-        
-	
 	errors = []
 	
         if "add" in discussionurl:
-                print("in ssssss")
+                
 		if not request.GET.get('content',' '):
 		    errors.append('Enter the content')
 		if not request.GET.get('created_by',' '):
 		    errors.append('Enter your email address')
                 print(errors)
 		if not errors:
-		    
-		    disid = request.GET['disid']
-		    
+		    disid = v['id']
 		    content= request.GET['content']
 		    created_by = request.GET['created_by']
 		    created_at = strftime("%Y-%m-%d", gmtime())
 		    updated_at = created_at
 		    addstr = {"discussion_id": disid, "content":content,"created_by": created_by,"created_at": created_at,"updated_at":updated_at}
 		    messagejson=simplejson.dumps(addstr)
-		    print("helllllllllllllllllllllllo")
-		    print(messagejson)
 		    addurl = "http://localhost:8080/message"
 		    r = requests.post(addurl, data= messagejson, allow_redirects=True)
-	            return render_to_response('discussion_detail.html',{'messages_list': messagejson, 'disid' : v['id']})
+	            return render_to_response('discussion_detail.html',{'messages_list': messagejson})
             
                 return render(request, 'discussion_detail.html',{'errors': errors},context_instance=RequestContext(request))
 	else:
@@ -632,32 +653,7 @@ def addcomment(request):
     c.update(csrf(request))
     return render_to_response('discussion_detail.html',c, context_instance=RequestContext(request))
 
-def addmessage(request):
-        errors = []
-        if request.method == 'GET':
-                
-		if not request.GET.get('content',' '):
-		    errors.append('Enter the content')
-		if not request.GET.get('created_by',' '):
-		    errors.append('Enter your email address')
 
-		if not errors:
-		    
-		    disid = request.GET['disid']
-		    
-		    content= request.GET['content']
-		    created_by = request.GET['created_by']
-		    created_at = strftime("%Y-%m-%d", gmtime())
-		    updated_at = created_at
-		    addstr = {"discussion_id": disid, "content":content,"created_by": created_by,"created_at": created_at,"updated_at":updated_at}
-		    messagejson=simplejson.dumps(addstr)
-		    print("helllllllllllllllllllllllo")
-		    print(messagejson)
-		    addurl = "http://localhost:8080/message"
-		    r = requests.post(addurl, data= messagejson, allow_redirects=True)
-	            return render_to_response('discussion_detail.html',{'messages_list': message, 'disid' : v['id']})
-            
-        return render(request, 'discussion_detail.html',{'errors': errors},context_instance=RequestContext(request))
 
 
 
@@ -680,7 +676,7 @@ def displaymessage(request,*args, **kwargs):
                         
                 if not errors:
                     
-                    disid = request.GET['disid']
+                    disid = v['id']
                     
                     content= request.GET['content']
                     created_by = request.GET['created_by']
@@ -700,9 +696,13 @@ def displaymessage(request,*args, **kwargs):
                 return render(request, 'discussion_detail.html',{'errors': errors},context_instance=RequestContext(request))
         else:
                 r=  requests.get('http://localhost:8080/message/%s' % v['id'])
+                print(v['id'])
                 if r.status_code == 200:
-                        message=r.json()
-                        return render_to_response('discussion_detail.html',{'messages_list': message, 'disid' : v['id']})
+                        message = r.json()
+                        if message:
+                            return render_to_response('discussion_detail.html',{'messages_list': message, 'disid' : v['id']})
+                        else:
+                            return render_to_response('discussion_detail.html')
 		if r.status_code == 404:
 			return render_to_response('discussion_detail.html')
 
