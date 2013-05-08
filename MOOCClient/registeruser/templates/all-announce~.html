@@ -1,28 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
-{% for a in announce %}
-{{a}}
-    {% for k,v in a.items %}
- 
-	      {% if k == "title" %}
-            	<p>title : {{ v }}</p>
-        	{% endif %}
-	      {% if k == "courseId" %}
-            	<p>courseId : {{ v }}</p>
-        	{% endif %}
-             {% if k == "description" %}
-            	<p>Description : {{ v }}</p>
-        	{% endif %}
-	     {% if k == "postDate" %}
-            	<p>postDate : {{ v }}</p>
-        	{% endif %}
-	     {% if k == "status" %}
-            	<p>status : {{ v }}</p>
-        	{% endif %}
-	     </p>   
-    {% endfor %}
-{%endfor%}
+<table class="table table-bordered">
+    <th> Id </th>
+    <th>Satus</th>
+    <th>Post Date</th>
+    <th>Description</th>
+    <th>Title</th>
+    <th>Course Id</th>
+ {% for a in announce %}
+<tr>
+    <td>{{a.id}}</td>
+    <td>{{a.status}}</td>
+    <td>{{a.postDate}}</td>
+    <td>{{a.description}}</td>
+    <td>{{a.title}}</td>
+    <td>{{a.courseId}}</td>
+ {% endfor %}
+    
+</tr>
+{% endfor %}
+</table>
 {% endblock %}
-
-
-	    

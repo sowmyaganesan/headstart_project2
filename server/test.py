@@ -10,8 +10,8 @@ from dao.mongo import Storage
 
  
 connection = Connection('localhost', 27017)
-#db = connection.mooc1
-db = connection.test
+db = connection.mooc1
+#db = connection.test
 
 class MongoEncoder(JSONEncoder):
     def default(self,obj,**kwargs):
@@ -136,19 +136,11 @@ List Discussion
 @route('/discussion/list', method='GET')
 def get_document():
     cursor = db['discussioncollection'].find()
-    json_docs=[]
-    json_docs.append("[")
-    for doc in cursor:
-        json_doc=json.dumps(doc,default = json_util.default)
-        json_docs.append(json_doc)
-        json_docs.append(",")
-  
-    json_docs = json_docs[:-1]
-    if json_docs:
-    	json_docs.append("]")
-    if not json_docs:
-        abort(404,'No document')
-    return json_docs
+    if not cursor:
+		abort(404, 'No document with id %s' % id)
+    response.content_type = 'application/json'
+    entries = [entry for entry in cursor]
+    return MongoEncoder().encode(entries)
 """
 Get Discussion by ID
 """
@@ -234,25 +226,18 @@ def get_document():
 
 
 """
-Get course by ID
+Get course by keyword
 """
 @route('/course/:id', method='GET')
 def get_document(id):
     regex = ".*"+id+".*";
     cursor = db['coursecollection'].find({"Description":{"$regex":regex}})
-    json_docs=[]
-    json_docs.append("[")
-    for doc in cursor:
-        json_doc=json.dumps(doc,default = json_util.default)
-        json_docs.append(json_doc)
-        json_docs.append(",")
-    
-    json_docs = json_docs[:-1]
-    json_docs.append("]")
-    if not json_docs:
-        abort(404,'No document')
-    return json_docs
-
+    if not cursor:
+		abort(404, 'No document with id %s' % id)
+    response.content_type = 'application/json'
+    entries = [entry for entry in cursor]
+    return MongoEncoder().encode(entries)
+	
 """
 Update course
 """
@@ -493,19 +478,11 @@ Get message by discussion id
 @route('/message/:id', method='GET')
 def get_message(id):
     cursor = db['messagecollection'].find({'discussion_id':id})
-    json_docs=[]
-    json_docs.append("[")
-    for doc in cursor:
-        json_doc=json.dumps(doc,default = json_util.default)
-        json_docs.append(json_doc)
-        json_docs.append(",")
-    
-    json_docs = json_docs[:-1]
-    if json_docs:
-        json_docs.append("]")
-    if not json_docs:
-        abort(404,'No document')
-    return json_docs
+    if not cursor:
+		abort(404, 'No document with id %s' % id)
+    response.content_type = 'application/json'
+    entries = [entry for entry in cursor]
+    return MongoEncoder().encode(entries)
 
 
 """

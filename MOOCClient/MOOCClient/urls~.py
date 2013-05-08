@@ -21,8 +21,8 @@ urlpatterns = patterns('',
 
     #Announcement Related Views
     url(r'^add-announce/$','registeruser.views.addannounce',name='addanounce'),
-    #url(r'^search-announce/$', 'registeruser.views.search_announce', name='search_announce'),
-    #url(r'^searchannouncement/$','registeruser.views.searchannouncement',name='searchanouncement'),
+    url(r'^search-announce/$', 'registeruser.views.search_announce', name='search_announce'),
+    url(r'^searchannouncement/$','registeruser.views.searchannouncement',name='searchanouncement'),
     url(r'^update-announce/$', 'registeruser.views.updateannouncement', name='updateannouncement'),
     url(r'^delete-announce/$', 'registeruser.views.deleteannounce', name='deleteannounce'),
     url(r'^all-announce/$', 'registeruser.views.displayannounce', name='displayannounce'),

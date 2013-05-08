@@ -17,11 +17,22 @@ h.style.visibility="visible";
 
 <p> update Announcement </p>
 
-<form action="/update-announce/" method="POST">{% csrf_token %}
+<form action="/update-announce/" method="GET">{% csrf_token %}
 <table>
 <tr>
-<td>Search document by id </td>
-<td><input type="text" name="announceid"/>{{announceid}}</td>
+<td>Announcement ID: </td>
+<td><select name = "announceid" >           
+            {% for a in result %}
+                    {% for k,v in a.items %}
+             {% if k == "id" %}
+               
+             <option>{{ v }}</option>
+                 {% endif %}
+              {% endfor %}
+            {% endfor %}
+	</select> </td>
+</tr>
+<tr>
 </tr>
 <tr>
 <td> Select update by category </td>
