@@ -300,18 +300,13 @@ List announcement
 @route('/announcement/list', method='GET')
 def get_document():
     cursor = db['announcementcollection'].find()
-    json_docs=[]
-    json_docs.append("[")
-    for doc in cursor:
-        json_doc=json.dumps(doc,default = json_util.default)
-        json_docs.append(json_doc)
-        json_docs.append(",")
-    
-    json_docs = json_docs[:-1]
-    json_docs.append("]")
-    if not json_docs:
-        abort(404,'No document')
-    return json_docs
+    if not cursor:
+        abort(404, 'No document with id %s' % id)
+    response.content_type = 'application/json'
+    entries = [entry for entry in cursor]
+    return MongoEncoder().encode(entries)
+
+
 
 """
 Get announcement by ID

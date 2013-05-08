@@ -239,6 +239,13 @@ def searchannouncement(request):
 # Update Announcement
 def updateannouncement(request):
     errors = []
+    if request.method != 'POST':
+        r =  requests.get('http://localhost:8080/announcement/list')
+        result = r.json()
+        print(result)
+            
+        return render(request, 'update-announce.html',{'result': result},context_instance=RequestContext(request)) 
+
     if request.method == 'POST':
         if not request.POST.get('announceid', ''):
             errors.append('Enter the announcement id')
@@ -269,10 +276,25 @@ def deleteannounce(request):
     errors = []
     if request.method != 'POST':
         r =  requests.get('http://localhost:8080/announcement/list')
-        result = r.json()
-        print(result)
-            
-        return render(request, 'delete-announce.html',{'result': result},context_instance=RequestContext(request)) 
+	print(r.status_code)
+
+	if r.status_code == 404:
+	   errors.append('No announcement to delete')
+	   return render(request, 'delete-announce.html',{'error':errors},context_instance=RequestContext(request)) 
+
+	if r.status_code == 200:
+           result = r.json()
+           print(result)
+	   if result:
+                print ('here11111')
+            	return render(request, 'delete-announce.html',{'result': result},context_instance=RequestContext(request)) 
+	   else:
+                print ('else')
+		errors.append('No announcement to delete')
+    		return render(request, 'delete-announce.html',{'error':errors},context_instance=RequestContext(request)) 
+    return render(request, 'delete-announce.html',{'error':'error'},context_instance=RequestContext(request)) 
+
+
 
     if request.method == 'POST':
         if not request.POST.get('announceid', ''):
@@ -283,10 +305,12 @@ def deleteannounce(request):
                 if r.status_code == 404:
                         return render(request, 'delete-announce.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
                 if r.status_code == 200:
-                        re =  requests.delete('http://localhost:8080/announcement/%s' % request.POST['announceid'])   
-                        return render(request, 'delete-announce.html',{'success': 'success'},context_instance=RequestContext(request))
+                        re =  requests.delete('http://localhost:8080/announcement/%s' % request.POST['announceid']) 
+                        if re.status_code == 200:  
+                        	return render(request, 'delete-announce.html',{'success': 'success'},context_instance=RequestContext(request))
+			else:
+				return render(request, 'delete-announce.html',{'errors': errors},context_instance=RequestContext(request))
 
-    return render(request, 'delete-announce.html',{'errors': errors},context_instance=RequestContext(request))
 
 #display all announcements
 def displayannounce(request):
