@@ -57,7 +57,7 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'registeruser.views.logout_user'),
     url(r'^update_user/$', 'registeruser.views.update_user'),
     url(r'^enroll_course/$', 'registeruser.views.enroll_course'),
-    #url(r'^drop_course/$', 'registeruser.views.drop_course'),
+    url(r'^drop_course/$', 'registeruser.views.drop_course'),
 
     # url(r'^MOOCClient/', include('MOOCClient.foo.urls')),
     # Uncomment the admin/doc line below to enable admin documentation:

@@ -561,7 +561,28 @@ def course_enroll():
 
    response.status = responsecode    
    response.add_header("Content-Type", "application/json")
-   return output  
+   return output
 
+@route('/course/drop', method='PUT')
+def course_drop():
+   
+   output = None
+   email = str(request.query.get("email"))
+   course_id = str(request.query.get("courseid"))
+   
+   print email+"email"
+   print course_id+"course_id"
+
+   if course_id is not None:
+      responsecode = Storage().drop_course(email, course_id)
+
+   if responsecode == 200:
+      output = {"success" : True}
+   else:
+      output = {"success" : False}
+
+   response.status = responsecode    
+   response.add_header("Content-Type", "application/json")
+   return output  
 
 run(host='localhost', port=8080)

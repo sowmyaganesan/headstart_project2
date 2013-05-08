@@ -775,15 +775,20 @@ def enroll_course(request):
 		return render_to_response("login.html",ctx,context_instance=RequestContext(request))
 	
 	courseid = request.GET.get('id')
-	payload = {"email":request.user.username, "courseId":courseid} 
 	updateurl = "http://127.0.0.1:8080/course/enroll?email="+request.user.username+"&courseid="+courseid
-	responsecode = requests.put(updateurl, data=json.dumps(payload), headers={'content-type': 'application/json', 'charset': 'utf-8'})
-	ctx={"message":"You are not logged in."}
+	responsecode = requests.put(updateurl, headers={'content-type': 'application/json', 'charset': 'utf-8'})
+	ctx={"message":"You Have Been enrolled"}
+	#TODO: Redirect to home page
 	return render_to_response('home.html',ctx,context_instance=RequestContext(request))
 
-
-
-
-
-
-
+def drop_course(request):
+	ctx={}
+	if not(request.user.is_authenticated()):
+		ctx={"message":"You are not logged in."}
+		return render_to_response("login.html",ctx,context_instance=RequestContext(request))
+	courseid = request.GET.get('id')
+	dropurl = "http://127.0.0.1:8080/course/drop?email="+request.user.username+"&courseid="+courseid
+	responsecode = requests.put(dropurl, headers={'content-type': 'application/json', 'charset': 'utf-8'})
+	ctx={"message":"Course Dropped"}
+	#TODO: Redirect to home page
+	return render_to_response('home.html',ctx,context_instance=RequestContext(request))
