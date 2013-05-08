@@ -218,7 +218,8 @@ def get_document():
 	entries = [entry for entry in cursor]
 	return MongoEncoder().encode(entries)
 
-    '''json_docs=[]
+	'''
+	json_docs=[]
     json_docs.append("[")
     for doc in cursor:
         json_doc=json.dumps(doc,default = json_util.default)

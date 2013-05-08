@@ -1,50 +1,45 @@
 {% extends "base.html" %}
 
 {% block content %}
-   {% for a in courses %}
-    {% for k,v in a.items %}
-
-	      {% if k == "id" %}
-            	<p>Course id : {{ v }}</p>
-        	{% endif %} 
-	      {% if k == "category" %}
-            	<p>category : {{ v }}</p>
-        	{% endif %}
-	      {% if k == "title" %}
-            	<p>title : {{ v }}</p>
-        	{% endif %}
-             {% if k == "section" %}
-            	<p>section : {{ v }}</p>
-        	{% endif %}
-	     {% if k == "dept" %}
-            	<p>dept : {{ v }}</p>
-        	{% endif %}
-	     {% if k == "term" %}
-            	<p>term : {{ v }}</p>
-        	{% endif %}
-	     {% if k == "instructor" %}
-            	<p>instructor : {{ v }}</p>
-        	{% endif %}
- 	     {% if k == "days" %}
-            	<p>days : {{ v }}</p>
-        	{% endif %}
-	     {% if k == "hours" %}
-            	<p>hours : {{ v }}</p>
-        	{% endif %}
-	     {% if k == "Description" %}
-            	<p>Description : {{ v }}</p>
-        	{% endif %}
-	     {% if k == "version" %}
-            	<p>version : {{ v }}</p>
-        	{% endif %}
-	     </p>
-		    
-      {% endfor %} 
-  <p>===================================================================</p>
+<table class="table table-bordered">
+    <th>Course Id</th>
+    <th>Title</th>
+    <th>Description</th>
+    <th>Category</th>
+    <th>Term and Year</th>
+    <th>Sections</th>
+    <th>Days</th>
+    <th>Time</th>
+    <th>Department</th>
+    <th>Instructor</th>
+ {% for course in courses %}
+<tr>
+    <td>{{course.id}}</td>
+    <td>{{course.title}}</td>
+    <td>{{course.Description}}</td>
+    <td>{{course.category}}</td>
+    <td>{{course.term}}{{course.year}}</td>
+    <td>{{course.section}}</td>
+    <td>{% for day in course.days %}
+        {{day}} 
+        {% endfor %}
+    </td>
+    <td>{% for hour in course.hours %}
+        {{hour}} 
+        {% endfor %}
+    </td>
+    <td>{{course.dept}}</td>
+    <td>{% for instructor in course.instructor %}
+        {{instructor.name}}</br>
+        {% endfor %}
+    </td>
+</tr>
+{% endfor %}
+</table>
 
 
-    {% endfor %}
+
 {% endblock %}
 
 
-	    
+
