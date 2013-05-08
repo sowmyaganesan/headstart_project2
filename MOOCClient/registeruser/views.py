@@ -473,7 +473,7 @@ def addquiz(request):
             r = requests.post(addurl, data=quizjson, allow_redirects=True)
             print r.content
             # response = urllib2.urlopen(addurl, coursejson)
-            return HttpResponse('message')
+            return render(request,'add-quiz.html',{'success':'Sucessfully added'},context_instance=RequestContext(request))
     return render(request, 'add-quiz.html',{'errors': errors},context_instance=RequestContext(request))
  
 def search_course_id(id):
