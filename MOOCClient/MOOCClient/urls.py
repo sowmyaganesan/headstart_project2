@@ -8,7 +8,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     
     # Examples:
-    #url(r'^$', 'registeruser.views.home', name='home'),
+    url(r'^$', 'registeruser.views.frontpage', name='frontpage'),
     url(r'^frontpage', 'registeruser.views.frontpage', name='frontpage'),
     url(r'^$', 'registeruser.views.frontpage', name='frontpage'),
     
@@ -45,7 +45,7 @@ urlpatterns = patterns('',
     url(r'^discussion_list/$', 'registeruser.views.displaydiscussion', name='displaydiscussion'),
     url(r'^discussion_detail/(?P<id>[a-zA-Z0-9-]+)/$', 'registeruser.views.displaymessage', name='displaymessage'),
     url(r'^discussion_detail/(?P<id>[a-zA-Z0-9-]+)/add/$', 'registeruser.views.displaymessage', name='displaymessage'),
-    url(r'^addmessage/$', 'registeruser.views.addmessage', name='addmessage'),
+    #url(r'^addmessage/$', 'registeruser.views.addmessage', name='addmessage'),
     url(r'^add-discuss/$','registeruser.views.adddiscuss',name='adddiscuss'),
     url(r'^delete-discuss/$', 'registeruser.views.deletediscuss', name='deletediscuss'),
 

@@ -7,9 +7,11 @@
   <link href="{% static "css/bootstrap.css"%}" rel="stylesheet">
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>  
   <script src="https://raw.github.com/twitter/bootstrap/master/js/bootstrap-dropdown.js"></script>
-  <style>.content {padding-top: 80px;}</style>
+  <style>.content {padding-top: 80px;}
+html { background: transparent }
+  </style>
 </head>
-<body>
+<body style="background-image: url({% static "dark_fish_skin/dark_fish_skin.png" %}); background-position: initial initial; background-repeat: initial initial;">
   <!--<div class="topbar">
     <div class="fill">
       <div class="container">
@@ -18,12 +20,12 @@
     </div>
   </div>-->
   {% block top_nav %}
-  <div class="navbar navbar-fixed-top">  
+  <div class="navbar navbar-inverse navbar-fixed-top">  
     <div class="navbar-inner">  
       <div class="container">  
         <ul class="nav">  
           <li class="active">  
-            <a class="brand" href="#">Moo!</a>  
+            <a class="brand" href="/">Moo!</a>  
           </li>  
         </ul> 
         
@@ -78,8 +80,6 @@
 </a>  
 <ul class="dropdown-menu">  
  <li><a href="/add-category/"> Add Category </a></li>
- <li><a href="/search-category/"> Search courses by category </a></li>
- <li><a href="/all-category/"> List All</a></li>
 </ul>  
 </li> 
 <li class="dropdown">  
@@ -90,10 +90,12 @@
   <b class="caret"></b>  
 </a>  
 <ul class="dropdown-menu">  
- <li><a href="/delete-quiz/"> Delete Quiz </a></li>
- <li><a href="/search_quiz/"> Search Quiz </a></li>
- <li><a href="/add-quiz/"> Add Quiz </a></li>
+  <li><a href="/add-quiz/"> Add Quiz </a></li>
  <li><a href="/update-quiz/"> Update Quiz </a></li>
+ <li><a href="/search_quiz/"> Search Quiz </a></li>
+ <li><a href="/delete-quiz/"> Delete Quiz </a></li>
+ 
+ 
 </ul>  
 </li>
 

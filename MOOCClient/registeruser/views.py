@@ -355,15 +355,20 @@ def search_category(request):
 
 
 def searchcategory(request):
-          
-	           if request.method == 'POST':
-                  	 r =  requests.get('http://localhost:8080/course/findcategory/%s' % request.POST['category'])
-                   if r.status_code == 404:
-                           return render(request,'search-category.html',{'errors': 'No courses in that category'},context_instance=RequestContext(request))
-                   if r.status_code == 200:
-                        category = r.json()
-                        return render_to_response('categorylist.html',{'category':category})
-
+	if request.method == 'POST':
+		r =  requests.get('http://localhost:8080/course/findcategory/%s' % request.POST['category'])
+		if r.status_code == 404:
+			r =  requests.get('http://localhost:8080/category/list')
+			category = r.json()
+			return render(request,'frontpage.html',{'errors': 'No courses in '+request.POST['category'],'category': category},context_instance=RequestContext(request))
+		if r.status_code == 200:
+			courses = r.json()
+			print courses
+			r =  requests.get('http://localhost:8080/category/list')
+			category=r.json()
+			return render_to_response('frontpage.html',{'category': category,'courses':courses},context_instance=RequestContext(request))
+			#return render_to_response('categorylist.html',{'category':category})
+	return render_to_response('frontpage.html',context_instance=RequestContext(request))
 #display all category
                 
 def displaycategory(request):

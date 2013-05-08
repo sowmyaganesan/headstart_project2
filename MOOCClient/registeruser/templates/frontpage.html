@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+{{errors}}
 <div class="row">
 	<div class="span6">
 		<div class="well well-large">
@@ -7,11 +8,14 @@
 			<!--<p><a href="add-category/"> Add Category </a></p>
 			<p><a href="search-category/"> Search courses by category </a></p>
 			<p><a href="all-category/"> List All</a></p>-->
-			<select>
+			<form name="changecategory" action="/searchcategory/" method="POST">
+			<select name="category">
 				{% for c in category%}
-				<option value={{c.id}}>{{c.description}}</option>
+				<option value={{c.name}}>{{c.description}}</option>
 				{% endfor %}
 			</select>
+			<input type="submit" class="btn"></input>
+		</form>
 		</div>
 	</div>
 	<div class="span6">
@@ -21,9 +25,11 @@
 			<p><a href="add-course/"> Add Course </a></p>
 			<p><a href="update-course/"> Update Course </a></p>
 			<p><a href="delete-course/"> Delete Course </a></p>-->
+			<ul>
 				{% for course in courses%}
-				<a href="/enroll_course/?id={{course.id}}">{{course.Description}}</a>
+				<li><a href="/search/?id={{course.Description}}">{{course.Description}}</a> - <a href="/enroll_course/?id={{course.id}}" >Enroll</a></li>
 				{% endfor %}
+			</ul>
 		</div>
 	</div>
 </div>
