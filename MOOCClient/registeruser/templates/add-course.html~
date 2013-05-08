@@ -3,68 +3,110 @@
 <style>
 
 </style>
+
 </head>
 {% block content %}
 
 
 <p> Add Course </p>
   <form action="/add-course/" method="post">{% csrf_token %}
-		<table>
-		<tr>
-			<td>Term</td>
-			<td><select name = "term">
-			  <option name="term" value="Spring">Spring</option>
-			  <option name="term" value="Fall">Fall</option>
-			  <option name="term" value="Summer">Summer</option>
-			  <option name="term" value="Winter">Winter</option>
-			</select> </td>
-		</tr>
-		
-		<tr>
-			<td>Title</td>
-			<td><input type="text" name="title"/></td>
-		</tr>
-		
-		<tr>
-			<td>Section</td>
-			<td><input type="text" name="section"/></td>
-		</tr>
-		
-		<tr>
-			<td>Department</td>
-			<td><input type="text" name="department"/></td>
-		</tr>
-		
-		<tr>
-			<td>Teacher Name</td>
-			<td><input type="text" name="teachername"/></td>
-		</tr>
+        <table>
+        <tr>
+        <td></td>
+        <td><input type="text" name="id" value={{id1}} ></td>
+        </tr>
+        <tr>
+            <td>Term</td>
+            <td><select name = "term">
+              <option name="term" value="Spring">Spring</option>
+              <option name="term" value="Fall">Fall</option>
+              <option name="term" value="Summer">Summer</option>
+              <option name="term" value="Winter">Winter</option>
+            </select> </td>
+        </tr>
+        
+        <tr>
+            <td>Title</td>
+            <td><input type="text" name="title"/></td>
+        </tr>
 
-		<tr>
-			<td>Teacher Id</td>
-			<td><input type="text" name="teacherid"/></td>
-		</tr>
-		
-		<tr>
-			<td>Days</td>
-			<td><select name="days">
-			  <option name="days" value="Monday">Monday</option>
-			  <option name="days" value="Tuesday">Tuesday</option>
-			  <option name="days" value="Wednesday">Wednesday</option>
-			  <option name="days" value="Thursday">Thursday</option>
-			  <option name="days" value="Friday">Friday</option>
-			</select> </td>
-		</tr>
-		
-		<tr>
-			<td>Time</td>
-			<td><input type="time" name="time1" id="time1" /></td>
-		</tr>
-		</table>
-		<div color="red">
-		{% for k in errors %}
-		<br>{{k}}<br>
-		{% endfor %}</div>
+        <tr>
+            <td>Category</td>
+	    <form>
+            <td><select name = "category" >
+                          
+            {% for a in result %}
+                    {% for k,v in a.items %}
+             {% if k == "category" %}
+               
+              <option>{{ v }}</option>
+                 {% endif %}
+              {% endfor %}
+            {% endfor %}
+            
+            </select> </td>
+	
+	
+        </tr>
+
+        
+        <tr>
+            <td>Section</td>
+            <td><input type="text" name="section"/></td>
+        </tr>
+        
+        <tr>
+            <td>Department</td>
+            <td><input type="text" name="department"/></td>
+        </tr>
+        
+        <tr>
+            <td>Instructor Name</td>
+            <td><input type="text" name="instructorname"/></td>
+        </tr>
+
+        <tr>
+            <td>Instructor Id</td>
+            <td><input type="text" name="instructorid"/></td>
+        </tr>
+        
+        <tr>
+            <td>Days</td>
+            <td><select name="days">
+              <option name="days" value="Monday">Monday</option>
+              <option name="days" value="Tuesday">Tuesday</option>
+              <option name="days" value="Wednesday">Wednesday</option>
+              <option name="days" value="Thursday">Thursday</option>
+              <option name="days" value="Friday">Friday</option>
+            </select> </td>
+        </tr>
+        
+        <tr>
+            <td>Hours</td>
+            <td><input type="time" name="time1" id="time1" /></td>
+        </tr>
+
+        <tr>
+            <td>Description</td>
+            <td><input type="text" name="Description" id="Description" /></td>
+        </tr>
+
+        <tr>
+            <td>version</td>
+            <td><input type="text" name="version" id="version" /></td>
+        </tr>
+
+
+        </table>
+        <div style="color:red">
+        {% for k in errors %}
+        <br>{{k}}<br>
+        {% endfor %}</div>
+
+        <div style="color:green">
+        {{sucess}}
+        </div>
+
         <input type="submit" value="add">
     </form>
 {% endblock %}

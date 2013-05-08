@@ -9,7 +9,7 @@
   
   {% if m.content %}
        <p><strong>{{ m.content }}</strong></p>
-       <p>Commented by : {{ m.created_by }} <small> on {{ m.created_at }}</small></p>
+       <p>Commented by : {{ m.created_by }} <small>on {{ m.created_at }}</small></p>
    
   {% endif %}
      
