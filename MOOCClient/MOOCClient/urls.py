@@ -8,8 +8,9 @@ admin.autodiscover()
 urlpatterns = patterns('',
     
     # Examples:
-    url(r'^$', 'registeruser.views.home', name='home'),
+    #url(r'^$', 'registeruser.views.home', name='home'),
     url(r'^frontpage', 'registeruser.views.frontpage', name='frontpage'),
+    url(r'^$', 'registeruser.views.frontpage', name='frontpage'),
     
     #Course Related Views
     url(r'^add-course/$', 'registeruser.views.addcourse', name='addcourse'),
@@ -54,7 +55,9 @@ urlpatterns = patterns('',
     url(r'^add_user$', 'registeruser.views.add_user'),
     url(r'^login$', 'registeruser.views.login_user', name='signin'), 
     url(r'^logout/$', 'registeruser.views.logout_user'),
-
+    url(r'^update_user/$', 'registeruser.views.update_user'),
+    url(r'^enroll_course/$', 'registeruser.views.enroll_course'),
+    #url(r'^drop_course/$', 'registeruser.views.drop_course'),
 
     # url(r'^MOOCClient/', include('MOOCClient.foo.urls')),
     # Uncomment the admin/doc line below to enable admin documentation:

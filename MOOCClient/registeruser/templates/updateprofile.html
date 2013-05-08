@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<form name="MyForm" class="form-horizontal" action="/update_user/" method="post">{{message}}
+  <h2 class="form-signin-heading">Update your details</h2>
+  <div class="control-group">
+    <label class="control-label" for="password">Password</label>
+    <div class="controls">
+      <input type="password" class="input-medium" placeholder="Password" name="password">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="firstname">First Name</label>
+    <div class="controls">
+      <input type="text" class="input-medium" placeholder="First Name" name="firstname" value=  "{{ user.first_name }}">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="lastname">Last Name</label>
+    <div class="controls">
+      <input type="text" class="input-medium" placeholder="Last Name" name="lastname" value= "{{user.last_name}}">
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button class="btn btn-medium btn-primary" type="submit">Update</button>
+    </div>
+  </div>
+</form>
+{% endblock %}

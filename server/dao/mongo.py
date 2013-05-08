@@ -24,3 +24,15 @@ class Storage(object):
 		except:
 			traceback.print_exec()
 			return {'res_code':500,"id":obj_id}
+	def enroll_course(self,email, course_id):
+		try:
+			self.user.update({"email":email}, {'$push': {'enrolled': course_id}})
+			return 200
+		except:
+			return 500
+	def drop_course(self,email, course_id):
+		try:
+			self.user.update({"email":email}, {'$pull': {'enrolled': course_id}})
+			return 200
+		except:
+			return 500
