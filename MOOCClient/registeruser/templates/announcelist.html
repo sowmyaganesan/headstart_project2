@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-  {%for a in announce%}
     {% for k,v in announce.items %}
  
 	      {% if k == "title" %}
@@ -20,7 +19,7 @@
         	{% endif %}
 	     </p>   
     {% endfor %}
-{% endfor %}
+
 
 {% endblock %}
 

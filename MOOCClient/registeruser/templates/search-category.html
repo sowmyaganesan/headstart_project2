@@ -4,11 +4,12 @@
   <form action="/searchcategory/" method="get">
         Search category : 
 	<select name="category">
-	<option value="1ba4d2">Engineering</option>
-	<option value="209393"> Arts </option>
-	<option value="2cd56d">Chemistry</option>
+	<option value="Engineering">Engineering</option>
+	<option value="Arts"> Arts </option>
+	<option value="Chemistry">Chemistry</option>
 	</select>
         <input type="submit" value="Search">
-	<div style="color:red" >{{ errors }} </div>
-    </form>
+   </form>
+<div style="color:red" >{{ errors }} </div>
+
 {% endblock %}

@@ -143,7 +143,8 @@ def get_document():
         json_docs.append(",")
   
     json_docs = json_docs[:-1]
-    json_docs.append("]")
+    if json_docs:
+    	json_docs.append("]")
     if not json_docs:
         abort(404,'No document')
     return json_docs
@@ -342,7 +343,7 @@ Get announcement by courseID
 
 @route('/announcement/findcourse/:id', method='GET')
 def get_document(id):
-    cursor = db['announcementcollection'].find({'courseId':id})
+    cursor = db['coursecollection'].find({'id':id})
     json_docs=[]
     for doc in cursor:
         json_doc=json.dumps(doc,default = json_util.default)
@@ -410,7 +411,7 @@ Get category by name
 @route('/course/findcategory/:id', method='GET')
 def get_document(id):
     print (id)
-    cursor = db['coursecollection'].find({'category':id})
+    cursor = db['coursecollection'].find({"category":id})
     json_docs=[]
     json_docs.append("[")
     for doc in cursor:
@@ -419,7 +420,8 @@ def get_document(id):
         json_docs.append(",")
    
     json_docs = json_docs[:-1]
-    json_docs.append("]")
+    if json_docs:
+       json_docs.append("]")
     if not json_docs:
         abort(404,'No document')
     return json_docs
@@ -475,7 +477,8 @@ def get_message(id):
         json_docs.append(",")
     
     json_docs = json_docs[:-1]
-    json_docs.append("]")
+    if json_docs:
+        json_docs.append("]")
     if not json_docs:
         abort(404,'No document')
     return json_docs

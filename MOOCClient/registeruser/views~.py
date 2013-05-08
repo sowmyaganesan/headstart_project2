@@ -15,7 +15,6 @@ import urlparse
 from django.contrib.auth import authenticate, login, logout
 import sys
 from django.contrib.auth.models import User
-from django.db import IntegrityError
 
 def home(request):
 	r =  requests.get('http://localhost:8080/rest/course/doc1')
@@ -27,7 +26,7 @@ def search_form(request):
     return render(request, 'search_form.html')
 
 def frontpage(request):
-    return render_to_response('frontpage.html',context_instance=RequestContext(request))
+    return render_to_response('frontpage.html')
 
 # Search Course by id
 
@@ -474,7 +473,7 @@ def addquiz(request):
             r = requests.post(addurl, data=quizjson, allow_redirects=True)
             print r.content
             # response = urllib2.urlopen(addurl, coursejson)
-            return render(request,'add-quiz.html',{'success':'Sucessfully added'},context_instance=RequestContext(request))
+            return render(request,'add-quiz.html',{'Successfully added'},context_instance=RequestContext(request))
     return render(request, 'add-quiz.html',{'errors': errors},context_instance=RequestContext(request))
  
 def search_course_id(id):
@@ -681,20 +680,10 @@ def signup(request):
 
 #Login - Signin
 def signin(request):
-	ctx = {}
-	if request.user.is_authenticated():
-		return render_to_response("home.html",ctx,context_instance=RequestContext(request))
-	else:
-		return render_to_response("login.html")
+   return render_to_response("login.html")
 
 #Login - Login
 def login_user(request):
-    ctx = {}
-    if request.user.is_authenticated():
-        return render_to_response("home.html",ctx,context_instance=RequestContext(request))
-    if request.method != 'POST':
-    	ctx={"message":"You are not logged in."}
-    	return render_to_response("login.html",ctx,context_instance=RequestContext(request))
     email = request.POST['email']
     password = request.POST['password']
     user = authenticate(username=email, password=password)
@@ -735,10 +724,6 @@ def add_user(request):
 		print "Unexpected error:", sys.exc_info()[0]
 		ctx = {'message':'User ID already exists.'}
 		return render_to_response("signup.html",ctx,context_instance=RequestContext(request))
-	except IntegrityError:
-		print "Unexpected error:", sys.exc_info()[0]
-		ctx = {'message':'User ID already exists.'}
-		return render_to_response("signup.html",ctx,context_instance=RequestContext(request))
 	payload = {"email":email, "own":[], "enrolled":[], "quizzes":[]} 
 	response = requests.post("http://127.0.0.1:8080/user", data=json.dumps(payload), headers={'content-type': 'application/json', 'charset': 'utf-8'})
 	if response.status_code == 200:
@@ -746,42 +731,6 @@ def add_user(request):
 		return render_to_response("login.html",ctx)
 	ctx = {"message":"Failed to register"}
 	return render_to_response("signup.html",ctx)
-
-def update_user(request):
-	ctx={}
-	if not(request.user.is_authenticated()):
-		ctx={"message":"You are not logged in."}
-		return render_to_response("login.html",ctx,context_instance=RequestContext(request))
-	if request.method != 'POST':
-		return render_to_response("updateprofile.html",ctx,context_instance=RequestContext(request))
-	password = request.POST['password']
-	firstname = request.POST.get('firstname')
-	lastname = request.POST.get('lastname')
-	if len(password.strip())>0:
-		print len(password)
-		request.user.set_password(password)
-	if firstname is not None:
-		request.user.first_name = firstname
-	if lastname is not None:
-		request.user.last_name = lastname
-	request.user.save()
-
-	return render_to_response('home.html',ctx,context_instance=RequestContext(request))
-
-def enroll_course(request):
-	ctx={}
-	if not(request.user.is_authenticated()):
-		ctx={"message":"You are not logged in."}
-		return render_to_response("login.html",ctx,context_instance=RequestContext(request))
-	
-	courseid = request.GET.get('id')
-	payload = {"email":request.user.username, "courseId":courseid} 
-	updateurl = "http://127.0.0.1:8080/course/enroll?email="+request.user.username+"&courseid="+courseid
-	responsecode = requests.put(updateurl, data=json.dumps(payload), headers={'content-type': 'application/json', 'charset': 'utf-8'})
-	ctx={"message":"You are not logged in."}
-	return render_to_response('home.html',ctx,context_instance=RequestContext(request))
-
-
 
 
 
