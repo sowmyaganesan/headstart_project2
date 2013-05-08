@@ -239,6 +239,13 @@ def searchannouncement(request):
 # Update Announcement
 def updateannouncement(request):
     errors = []
+    if request.method != 'POST':
+        r =  requests.get('http://localhost:8080/announcement/list')
+        result = r.json()
+        print(result)
+            
+        return render(request, 'update-announce.html',{'result': result},context_instance=RequestContext(request)) 
+
     if request.method == 'POST':
         if not request.POST.get('announceid', ''):
             errors.append('Enter the announcement id')

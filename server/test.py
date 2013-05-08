@@ -10,8 +10,8 @@ from dao.mongo import Storage
 
  
 connection = Connection('localhost', 27017)
-#db = connection.mooc1
-db = connection.test
+db = connection.mooc1
+#db = connection.test
 
 class MongoEncoder(JSONEncoder):
     def default(self,obj,**kwargs):
@@ -234,7 +234,7 @@ def get_document():
 
 
 """
-Get course by ID
+Get course by keyword
 """
 @route('/course/:id', method='GET')
 def get_document(id):

@@ -27,7 +27,12 @@ def search_form(request):
     return render(request, 'search_form.html')
 
 def frontpage(request):
-    return render_to_response('frontpage.html',context_instance=RequestContext(request))
+	r =  requests.get('http://localhost:8080/category/list')
+	category=r.json()
+	r =  requests.get('http://127.0.0.1:8080/course/list')
+	courses=r.json()
+	#return render_to_response('all-category.html',{'category': category})
+	return render_to_response('frontpage.html',{'category': category,'courses':courses},context_instance=RequestContext(request))
 
 # Search Course by id
 
@@ -340,7 +345,7 @@ def search_category(request):
 
 
 def searchcategory(request):
-           print ('here')
+          
 	           if request.method == 'POST':
                   	 r =  requests.get('http://localhost:8080/course/findcategory/%s' % request.POST['category'])
                    if r.status_code == 404:
