@@ -10,7 +10,8 @@ from dao.mongo import Storage
 
  
 connection = Connection('localhost', 27017)
-db = connection.mooc1
+#db = connection.mooc1
+db = connection.test
 
 class MongoEncoder(JSONEncoder):
     def default(self,obj,**kwargs):
@@ -210,8 +211,14 @@ List course
 """
 @route('/course/list', method='GET')
 def get_document():
-    cursor = db['coursecollection'].find()
-    json_docs=[]
+	cursor = db['coursecollection'].find()
+	if not cursor:
+		abort(404, 'No document with id %s' % id)
+	response.content_type = 'application/json'
+	entries = [entry for entry in cursor]
+	return MongoEncoder().encode(entries)
+
+    '''json_docs=[]
     json_docs.append("[")
     for doc in cursor:
         json_doc=json.dumps(doc,default = json_util.default)
@@ -222,7 +229,7 @@ def get_document():
     json_docs.append("]")
     if not json_docs:
         abort(404,'No document')
-    return json_docs
+    return json_docs'''
 
 
 """
@@ -384,8 +391,14 @@ List category
 """
 @route('/category/list', method='GET')
 def get_document():
-    cursor = db['categorycollection'].find()
-    json_docs=[]
+	cursor = db['categorycollection'].find()
+	if not cursor:
+		abort(404, 'No document with id %s' % id)
+	response.content_type = 'application/json'
+	entries = [entry for entry in cursor]
+	return MongoEncoder().encode(entries)
+
+	'''json_docs=[]
     json_docs.append("[")
     for doc in cursor:
         json_doc=json.dumps(doc,default = json_util.default)
@@ -396,7 +409,7 @@ def get_document():
     json_docs.append("]")
     if not json_docs:
         abort(404,'No document')
-    return json_docs
+    return json_docs'''
 
 """
 Get category by ID
