@@ -580,6 +580,15 @@ def course_drop():
 
    response.status = responsecode    
    response.add_header("Content-Type", "application/json")
-   return output  
+   return output
 
-run(host='localhost', port=8080)
+@route('/course/enrolled',method='GET')
+def enrolled_course():
+    output = {'courses':''}
+    email = str(request.query.get("email"))
+    if email is not None:
+        output = Storage().my_enrolled_courses(email)
+    return output
+
+
+run(host='198.162.100.112', port=8080)

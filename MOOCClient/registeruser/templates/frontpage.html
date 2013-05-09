@@ -9,13 +9,13 @@
 			<p><a href="search-category/"> Search courses by category </a></p>
 			<p><a href="all-category/"> List All</a></p>-->
 			<form name="changecategory" action="/searchcategory/" method="POST">
-			<select name="category">
-				{% for c in category%}
-				<option value={{c.name}}>{{c.description}}</option>
-				{% endfor %}
-			</select>
-			<input type="submit" class="btn"></input>
-		</form>
+				<select name="category">
+					{% for c in category%}
+					<option value={{c.name}}>{{c.description}}</option>
+					{% endfor %}
+				</select>
+				<input type="submit" class="btn"></input>
+			</form>
 		</div>
 	</div>
 	<div class="span6">
@@ -37,28 +37,27 @@
 	<div class="span6">
 		<div class="well well-large">
 			<h3>My Enrolled Courses</h3>
-			<!--<P> Announcement </p>
-				<p><a href="add-announce/"> Add Announcement </a></p>
-				<p><a href="update-announce/"> Update Announcement </a></p>
-				<p><a href="delete-announce/"> Delete Announcement </a></p>
-				<p><a href="all-announce/"> List All</a></p>
-
-				<P> Discussion </p>
-					<p><a href="add-discuss/"> Add Discussion </a></p>
-					<p><a href="delete-discuss/"> Delete Discussion </a></p>
-					<p><a href="discussion_list/"> Discussion List</a></p>
-
-					<P> Quiz </p>
-						<p><a href="delete-quiz/"> Delete Quiz </a></p>
-						<p><a href="search_quiz/"> Search Quiz </a></p>
-						<p><a href="add-quiz/"> Add Quiz </a></p>
-						<p><a href="update-quiz/"> Update Quiz </a></p>-->
-					</div>
-				</div>
-				<div class="span6">
-					<div class="well well-large">
-						<h3>My Owned Courses</h3>
-					</div>
-				</div>
-			</div>
-			{% endblock %}
+			
+			<ul>
+				{% for course in enrolledcourses %}
+				{% for enrolled in course.enrolled %}
+				<li>{{ enrolled }}</li>
+				{% endfor %}
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div class="span6">
+		<div class="well well-large">
+			<h3>My Owned Courses</h3>
+			<ul>
+				{% for course in own %}
+				{% for enrolled in course.own %}
+				<li>{{ enrolled }}</li>
+				{% endfor %}
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}

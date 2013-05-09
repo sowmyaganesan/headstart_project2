@@ -12,7 +12,7 @@
     <td><select name = "courseid" >           
             {% for a in result %}
                     {% for k,v in a.items %}
-             {% if k == "id" %}
+             {% if k == "Description" %}
                
              <option>{{ v }}</option>
                  {% endif %}

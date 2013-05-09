@@ -17,8 +17,11 @@ import sys
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 
+#serverurl = 'http://192.168.100.112:8080'
+serverurl = 'http://198.162.100.111:8080'
+
 def home(request):
-	r =  requests.get('http://localhost:8080/rest/course/doc1')
+	r =  requests.get(serverurl+'/rest/course/doc1')
         courses=r.json()
 	print(r.json())
 	return render_to_response('courselist.html',{'courses': courses})
@@ -27,19 +30,21 @@ def search_form(request):
     return render(request, 'search_form.html')
 
 def frontpage(request):
-	r =  requests.get('http://localhost:8080/category/list')
+	r =  requests.get(serverurl+'/category/list')
 	category=r.json()
-	r =  requests.get('http://127.0.0.1:8080/course/list')
+	r =  requests.get(serverurl+'/course/list')
 	courses=r.json()
+	updateurl = serverurl+"/course/enrolled?email="+request.user.username
+	responsecode = requests.get(updateurl)
 	#return render_to_response('all-category.html',{'category': category})
-	return render_to_response('frontpage.html',{'category': category,'courses':courses},context_instance=RequestContext(request))
+	return render_to_response('frontpage.html',{'category': category,'courses':courses,'enrolledcourses':responsecode.json()},context_instance=RequestContext(request))
 
 # Search Course by id
 
 def search(request):
     if 'id' in request.GET:
 	
-           r =  requests.get('http://localhost:8080/course/%s' % request.GET['id'])
+           r =  requests.get(serverurl+'/course/%s' % request.GET['id'])
 	   if r.status_code == 404:
 		return render(request, 'search_form.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
 	   if r.status_code == 200:
@@ -52,7 +57,7 @@ def search(request):
 def addcourse(request):
     errors = []
     if request.method != 'POST':
-        r =  requests.get('http://localhost:8080/category/list')
+        r =  requests.get(serverurl+'/category/list')
 	result=r.json()
         print(result)
             
@@ -106,7 +111,7 @@ def addcourse(request):
 def updatecourse(request):
     errors = []
     if request.method != 'POST':
-    	r =  requests.get('http://127.0.0.1:8080/course/list')
+    	r =  requests.get(serverurl+'/course/list')
 	courses=r.json()
 	return render(request, 'update-course.html',{'courses': courses},context_instance=RequestContext(request))
     if request.method == 'POST':
@@ -124,11 +129,11 @@ def updatecourse(request):
 	       return render(request, 'add-course.html',{'id1':courseid},context_instance=RequestContext(request))
 	    if value != 'all':
 
-	       r =  requests.get('http://localhost:8080/course/%s' % request.POST['courseid'])
+	       r =  requests.get(serverurl+'/course/%s' % request.POST['courseid'])
 	       if r.status_code == 404:
 		  return render(request, 'update-course.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
 	       else:
-	   	  updateurl = "http://localhost:8080/course/"+ courseid + "?" + field1 + "=" + value
+	   	  updateurl = serverurl+"/course/"+ courseid + "?" + field1 + "=" + value
 	          print(updateurl)
 		  r = requests.put(updateurl, ' ' , allow_redirects=True)
 	          return render(request, 'update-course.html',{'values': 'Field Updated'},context_instance=RequestContext(request))
@@ -139,7 +144,7 @@ def updatecourse(request):
 def deletecourse(request):
     errors = []
     if request.method != 'POST':
-        r =  requests.get('http://localhost:8080/course/list')
+        r =  requests.get(serverurl+'/course/list')
         result = r.json()
         print(result)
             
@@ -152,18 +157,18 @@ def deletecourse(request):
             errors.append('Enter the courseid')
         if not errors:
 	    courseid= request.POST['courseid']
-	    r =  requests.get('http://localhost:8080/course/%s' % request.POST['courseid'])
+	    r =  requests.get(serverurl+'/course/%s' % request.POST['courseid'])
 	    if r.status_code == 404:
 		return render(request, 'delete-course.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
 	    if r.status_code == 200:
-	        r =  requests.get('http://localhost:8080/announcement/findcourse/%s' % request.POST['courseid'])
+	        r =  requests.get(serverurl+'/announcement/findcourse/%s' % request.POST['courseid'])
 	        if r.status_code == 200:
 		   # delete all announcement under the course id
-		   re =  requests.delete('http://localhost:8080/announcement/course/%s' % request.POST['courseid']) 
+		   re =  requests.delete(serverurl+'/announcement/course/%s' % request.POST['courseid']) 
 		   ann_status='yes'
 		   print(ann_status)
 		
-		r =  requests.get('http://localhost:8080/discussion/%s' % request.POST['courseid'])
+		r =  requests.get(serverurl+'/discussion/%s' % request.POST['courseid'])
 	        if r.status_code == 200:
 	           r =  requests.delete('http://localhost:8080/discussion/course/%s' % request.POST['courseid'])
 	           dis_status='yes'
@@ -172,7 +177,7 @@ def deletecourse(request):
 	      		
 			
 		if (ann_status == 'yes' and dis_status == 'yes'):
-		   	re =  requests.delete('http://localhost:8080/course/%s' % request.POST['courseid'])   
+		   	re =  requests.delete(serverurl+'/course/%s' % request.POST['courseid'])   
 		        return render(request, 'delete-course.html',{'success': 'Success'},context_instance=RequestContext(request))
 
     return render(request, 'delete-course.html',{'errors': errors},context_instance=RequestContext(request))
@@ -208,7 +213,7 @@ def addannounce(request):
 	    status = request.POST['status']
 	    print (courseId)
 	    for courseId in request.POST:
-                    r = requests.get('http://localhost:8080/announcement/findcourse/%s' % request.POST[courseId])
+                    r = requests.get(serverurl+'/announcement/findcourse/%s' % request.POST[courseId])
                     print('here2')
                     print('_______________')
                     print(r.status_code)
@@ -216,7 +221,7 @@ def addannounce(request):
                          addstr = {"id": id1, "courseId":courseId,"title": title,"description": description,"postDate": postDate,"status": status}
                          announcejson=simplejson.dumps(addstr)
                          print(announcejson)
-                         addurl = "http://localhost:8080/announcements"
+                         addurl = serverurl+"/announcements"
                          r = requests.post(addurl, data= announcejson, allow_redirects=True)
                          print r.content
                          return render(request, 'add-announce.html',{'success':'successfully added'},context_instance=RequestContext(request))
@@ -234,7 +239,7 @@ def searchannouncement(request):
     announce=''
     if 'id' in request.GET:
 	
-           r =  requests.get('http://localhost:8080/announcement/%s' % request.GET['id'])
+           r =  requests.get(serverurl+'/announcement/%s' % request.GET['id'])
 	   if r.status_code == 404:
 		return render(request,'search-announce.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
 	   else:
@@ -245,7 +250,7 @@ def searchannouncement(request):
 def updateannouncement(request):
     errors = []
     if request.method != 'POST':
-        r =  requests.get('http://localhost:8080/announcement/list')
+        r =  requests.get(serverurl+'/announcement/list')
         result = r.json()
         print(result)
             
@@ -266,11 +271,11 @@ def updateannouncement(request):
            return render(request, 'add-announce.html',{'id1':announceid},context_instance=RequestContext(request))
         if value != 'all':
 
-           r =  requests.get('http://localhost:8080/announcement/%s' % request.POST['announceid'])
+           r =  requests.get(serverurl+'/announcement/%s' % request.POST['announceid'])
            if r.status_code == 404:
                    return render(request, 'update-announce.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
            else:
-              updateurl = "http://localhost:8080/announcement/"+ announceid + "?" + field1 + "=" + value
+              updateurl = serverurl+"/announcement/"+ announceid + "?" + field1 + "=" + value
               print(updateurl)
               r = requests.put(updateurl, ' ' , allow_redirects=True)
               return render(request, 'update-announce.html',{'values': 'Field Updated'},context_instance=RequestContext(request))
@@ -280,7 +285,7 @@ def updateannouncement(request):
 def deleteannounce(request):
     errors = []
     if request.method != 'POST':
-        r =  requests.get('http://localhost:8080/announcement/list')
+        r =  requests.get(serverurl+'/announcement/list')
 	print(r.status_code)
 
 	if r.status_code == 404:
@@ -305,11 +310,11 @@ def deleteannounce(request):
             errors.append('Enter the announcementId')
         if not errors:
                 announceid= request.POST['announceid']
-                r =  requests.get('http://localhost:8080/announcement/%s' % request.POST['announceid'])
+                r =  requests.get(serverurl+'/announcement/%s' % request.POST['announceid'])
                 if r.status_code == 404:
                         return render(request, 'delete-announce.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
                 if r.status_code == 200:
-                        re =  requests.delete('http://localhost:8080/announcement/%s' % request.POST['announceid']) 
+                        re =  requests.delete(serverurl+'/announcement/%s' % request.POST['announceid']) 
                         if re.status_code == 200:  
                         	return render(request, 'delete-announce.html',{'success': 'success'},context_instance=RequestContext(request))
 			else:
@@ -319,7 +324,7 @@ def deleteannounce(request):
 
 #display all announcements
 def displayannounce(request):
-	r=  requests.get('http://localhost:8080/announcement/list')
+	r=  requests.get(serverurl+'/announcement/list')
 	if r.status_code == 404:
                 return render(request, 'all-announce.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
 	if r.status_code == 200:
@@ -355,7 +360,7 @@ def addcategory(request):
 	    
 	    print(categoryjson)
 	    
-	    addurl = "http://localhost:8080/categories"
+	    addurl = serverurl+"/categories"
 	    r = requests.post(addurl, data= categoryjson, allow_redirects=True)
 	    print r.content
             return render(request, 'add-category.html',{'success':'successfully added'},context_instance=RequestContext(request))
@@ -365,7 +370,7 @@ def addcategory(request):
 
 def search_category(request):
 	if request.method != 'POST':
-		r =  requests.get('http://localhost:8080/category/list')
+		r =  requests.get(serverurl+'/category/list')
 		result = r.json()
 		print(result)
 		return render(request, 'search-category.html',{'result': result},context_instance=RequestContext(request)) 
@@ -373,15 +378,15 @@ def search_category(request):
 
 def searchcategory(request):
 	if request.method == 'POST':
-		r =  requests.get('http://localhost:8080/course/findcategory/%s' % request.POST['category'])
+		r =  requests.get(serverurl+'/course/findcategory/%s' % request.POST['category'])
 		if r.status_code == 404:
-			r =  requests.get('http://localhost:8080/category/list')
+			r =  requests.get(serverurl+'/category/list')
 			category = r.json()
 			return render(request,'frontpage.html',{'errors': 'No courses in '+request.POST['category'],'category': category},context_instance=RequestContext(request))
 		if r.status_code == 200:
 			courses = r.json()
 			print courses
-			r =  requests.get('http://localhost:8080/category/list')
+			r =  requests.get(serverurl+'/category/list')
 			category=r.json()
 			return render_to_response('frontpage.html',{'category': category,'courses':courses},context_instance=RequestContext(request))
 			#return render_to_response('categorylist.html',{'category':category})
@@ -389,7 +394,7 @@ def searchcategory(request):
 #display all category
                 
 def displaycategory(request):
-	r=  requests.get('http://localhost:8080/category/list')
+	r=  requests.get(serverurl+'/category/list')
 	
 	if r.status_code == 404:
                 return render(request, 'all-category.html',{'errors': '404 Document not found'},context_instance=RequestContext(request))
@@ -424,7 +429,7 @@ def adddiscuss(request):
 	    
 	    print(discussjson)
 	    
-	    addurl = "http://localhost:8080/discussion"
+	    addurl = serverurl+"/discussion"
 	    r = requests.post(addurl, data= discussjson, allow_redirects=True)
 	    print r.content
             return render(request, 'add-discuss.html',{'success':'successfully added'},context_instance=RequestContext(request))
@@ -434,7 +439,7 @@ def adddiscuss(request):
 def deletediscuss(request):
     errors = []
     if request.method != 'POST':
-        r =  requests.get('http://localhost:8080/discussion/list')
+        r =  requests.get(serverurl+'/discussion/list')
         result = r.json()
         print(result)
             
@@ -444,11 +449,11 @@ def deletediscuss(request):
             errors.append('Enter the DiscussionId')
         if not errors:
                 discussid= request.POST['discussid']
-                r =  requests.get('http://localhost:8080/discussion/%s' % request.POST['discussid'])
+                r =  requests.get(serverurl+'/discussion/%s' % request.POST['discussid'])
                 if r.status_code == 404:
                         return render(request, 'delete-discuss.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
                 if r.status_code == 200:
-                        re =  requests.delete('http://localhost:8080/discussion/%s' % request.POST['discussid'])   
+                        re =  requests.delete(serverurl+'/discussion/%s' % request.POST['discussid'])   
                         return render(request, 'delete-discuss.html',{'success': 'success'},context_instance=RequestContext(request))
 
     return render(request, 'delete-discuss.html',{'errors': errors},context_instance=RequestContext(request))
@@ -462,11 +467,11 @@ def deletequiz(request):
             errors.append('Enter the quizId')
         if not errors:
                 quizid= request.POST['quizid']
-                r =  requests.get('http://localhost:8080/quiz/%s' % request.POST['quizid'])
+                r =  requests.get(serverurl+'/quiz/%s' % request.POST['quizid'])
                 if r.status_code == 404:
                         return render(request, 'delete-quiz.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
                 if r.status_code == 200:
-                        re =  requests.delete('http://localhost:8080/quiz/%s' % request.POST['quizid'])   
+                        re =  requests.delete(serverurl+'/quiz/%s' % request.POST['quizid'])   
                         return render(request, 'delete-quiz.html',{'success': 'success'},context_instance=RequestContext(request))
 
     return render(request, 'delete-quiz.html',{'errors': errors},context_instance=RequestContext(request))
@@ -481,7 +486,7 @@ def search_quiz(request):
 def searchquiz(request):
     quiz = ''
     if 'id' in request.GET:
-        r =  requests.get('http://localhost:8080/quiz/course/%s' % request.GET['id'])
+        r =  requests.get(serverurl+'/quiz/course/%s' % request.GET['id'])
         if r.status_code == 404:
             return render(request, 'search_quiz.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
         else:
@@ -535,7 +540,7 @@ def addquiz(request):
            
             quizjson=simplejson.dumps({"id": id1, "courseId": cid, "questions":([{"question":"%s" %ques,"options":list1,"answer":a1,"point": p1}])})
             print(quizjson)
-            addurl = "http://localhost:8080/quizzes"
+            addurl = serverurl+"/quizzes"
             r = requests.post(addurl, data=quizjson, allow_redirects=True)
             print r.content
             # response = urllib2.urlopen(addurl, coursejson)
@@ -543,7 +548,7 @@ def addquiz(request):
     return render(request, 'add-quiz.html',{'errors': errors},context_instance=RequestContext(request))
  
 def search_course_id(id):
-    addurl = "http://localhost:8080/course/list"
+    addurl = serverurl+"/course/list"
     r = requests.get(addurl, data="", allow_redirects=True)
     if(r.status_code==200):
    	 return True
@@ -580,12 +585,12 @@ def updatequiz(request):
             opt1   = request.POST['opt1']
             an1    = request.POST['an1']
             pt1    = request.POST['pt1']
-            r =  requests.get('http://localhost:8080/quiz/%s' % quizid)
+            r =  requests.get(serverurl+'/quiz/%s' % quizid)
             if r.status_code == 404:
                 errors.append(' 404 Document not found')
                 return render(request, 'update-quiz.html',{'errors': errors},context_instance=RequestContext(request))
             else:
-                updateurl = "http://localhost:8080/quiz/" + quizid+ "?" + "answer" + "=" + an1 + "&point=" + pt1
+                updateurl = serverurl+"/quiz/" + quizid+ "?" + "answer" + "=" + an1 + "&point=" + pt1
                 r = requests.put(updateurl, ' ' , allow_redirects=True)
                 return render(request, 'update-quiz.html',{'values': 'Field Updated'},context_instance=RequestContext(request))
  
@@ -600,7 +605,7 @@ def updatequiz(request):
 
 #display all discussion
 def displaydiscussion(request):
-	r=  requests.get('http://localhost:8080/discussion/list')
+	r=  requests.get(serverurl+'/discussion/list')
 	if r.status_code == 404:
                 return render(request, 'discussion_list.html',{'errors': ' 404 Document not found'},context_instance=RequestContext(request))
 	if r.status_code == 200:
@@ -633,13 +638,13 @@ def displaymessage(request,*args, **kwargs):
 		    updated_at = created_at
 		    addstr = {"discussion_id": disid, "content":content,"created_by": created_by,"created_at": created_at,"updated_at":updated_at}
 		    messagejson=simplejson.dumps(addstr)
-		    addurl = "http://localhost:8080/message"
+		    addurl = serverurl+"/message"
 		    r = requests.post(addurl, data= messagejson, allow_redirects=True)
 	            return render_to_response('discussion_detail.html',{'messages_list': messagejson})
             
                 return render(request, 'discussion_detail.html',{'errors': errors},context_instance=RequestContext(request))
 	else:
-		r=  requests.get('http://localhost:8080/message/%s' % v['id'])
+		r=  requests.get(serverurl+'/message/%s' % v['id'])
 		if r.status_code == 200:
 		        message=r.json()
 		        return render_to_response('discussion_detail.html',{'messages_list': message, 'disid' : v['id']})
@@ -690,15 +695,15 @@ def displaymessage(request,*args, **kwargs):
                     print('hello')
                     print (messagejson)
                    
-                    addurl = "http://localhost:8080/message"
+                    addurl = serverurl+"/message"
                     r = requests.post(addurl, data= messagejson, allow_redirects=True)
-                    r=  requests.get('http://localhost:8080/message/%s' % v['id'])
+                    r=  requests.get(serverurl+'/message/%s' % v['id'])
                     message=r.json()
                     return render_to_response('discussion_detail.html',{'messages_list': message, 'disid' : v['id']})
                     
                 return render(request, 'discussion_detail.html',{'errors': errors},context_instance=RequestContext(request))
         else:
-                r=  requests.get('http://localhost:8080/message/%s' % v['id'])
+                r=  requests.get(serverurl+'/message/%s' % v['id'])
                 print(v['id'])
                 if r.status_code == 200:
                         message = r.json()
@@ -727,9 +732,9 @@ def signin(request):
 def login_user(request):
     ctx = {}
     if request.user.is_authenticated():
-		r =  requests.get('http://localhost:8080/category/list')
+		r =  requests.get(serverurl+'/category/list')
 		category=r.json()
-		r =  requests.get('http://127.0.0.1:8080/course/list')
+		r =  requests.get(serverurl+'/course/list')
 		courses=r.json()
 		return render_to_response('frontpage.html',{'category': category,'courses':courses},context_instance=RequestContext(request))    
     if request.method != 'POST':
@@ -741,9 +746,9 @@ def login_user(request):
     if user is not None:
         if user.is_active:
 			login(request, user)
-			r= requests.get('http://localhost:8080/category/list')
+			r= requests.get(serverurl+'/category/list')
 			category=r.json()
-			r =  requests.get('http://127.0.0.1:8080/course/list')
+			r =  requests.get(serverurl+'/course/list')
 			courses=r.json()
 			return render_to_response('frontpage.html',{'category': category,'courses':courses},context_instance=RequestContext(request))   
         else:
@@ -782,7 +787,7 @@ def add_user(request):
 		ctx = {'message':'User ID already exists.'}
 		return render_to_response("signup.html",ctx,context_instance=RequestContext(request))
 	payload = {"email":email, "own":[], "enrolled":[], "quizzes":[]} 
-	response = requests.post("http://127.0.0.1:8080/user", data=json.dumps(payload), headers={'content-type': 'application/json', 'charset': 'utf-8'})
+	response = requests.post(serverurl+"/user", data=json.dumps(payload), headers={'content-type': 'application/json', 'charset': 'utf-8'})
 	if response.status_code == 200:
 		ctx = {"message" : "User successfully registered, please login to continue."}
 		return render_to_response("login.html",ctx)
@@ -817,7 +822,7 @@ def enroll_course(request):
 		return render_to_response("login.html",ctx,context_instance=RequestContext(request))
 	
 	courseid = request.GET.get('id')
-	updateurl = "http://127.0.0.1:8080/course/enroll?email="+request.user.username+"&courseid="+courseid
+	updateurl = serverurl+"/course/enroll?email="+request.user.username+"&courseid="+courseid
 	responsecode = requests.put(updateurl, headers={'content-type': 'application/json', 'charset': 'utf-8'})
 	ctx={"message":"You Have Been enrolled"}
 	#TODO: Redirect to home page
@@ -829,8 +834,20 @@ def drop_course(request):
 		ctx={"message":"You are not logged in."}
 		return render_to_response("login.html",ctx,context_instance=RequestContext(request))
 	courseid = request.GET.get('id')
-	dropurl = "http://127.0.0.1:8080/course/drop?email="+request.user.username+"&courseid="+courseid
+	dropurl = serverurl+"/course/drop?email="+request.user.username+"&courseid="+courseid
 	responsecode = requests.put(dropurl, headers={'content-type': 'application/json', 'charset': 'utf-8'})
 	ctx={"message":"Course Dropped"}
 	#TODO: Redirect to home page
 	return render_to_response('home.html',ctx,context_instance=RequestContext(request))
+
+def my_course(request):
+	ctx={}
+	if not(request.user.is_authenticated()):
+		ctx={"message":"You are not logged in."}
+		return render_to_response("login.html",ctx,context_instance=RequestContext(request))
+	
+	email = request.GET.get('email')
+	updateurl = serverurl+"/course/enrolled?email="+request.user.username
+	responsecode = requests.get(updateurl)
+	print responsecode.json()
+	return render_to_response('frontpage.html',{'enrolledcourses':responsecode.json()},context_instance=RequestContext(request))

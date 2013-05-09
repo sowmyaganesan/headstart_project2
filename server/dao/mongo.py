@@ -1,8 +1,17 @@
 import sys
 import traceback
 from bson.objectid import ObjectId
+import simplejson
+from json import JSONEncoder
 
 from pymongo import Connection
+
+class MongoEncoder(JSONEncoder):
+    def default(self,obj,**kwargs):
+        if isinstance(obj,ObjectId):
+            return str(obj)
+        else:
+            return JSONEncoder.default(obj,**kwargs)
 
 class Storage(object):
 	def __init__(self):
@@ -36,5 +45,13 @@ class Storage(object):
 			return 200
 		except:
 			return 500
-
-	
+	def my_enrolled_courses(self,email):
+		try:
+			response = self.user.find({"email":email},{'enrolled':1,'own':1})
+			if not response:
+				abort(404, 'No document with id %s' % id)
+			response.content_type = 'application/json'
+			entries = [entry for entry in response]
+			return MongoEncoder().encode(entries)
+		except NameError(" error"):
+			return "Exception"
